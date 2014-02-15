@@ -74,7 +74,7 @@ module.exports = {
         files_to_assets: [
             'vendor/bootstrap/img/glyphicons-halflings.png',
             'vendor/bootstrap/img/glyphicons-halflings-white.png',
-            'vendor/font-awesome/font/**'
+            'vendor/font-awesome/fonts/**'
         ]
     }
 };

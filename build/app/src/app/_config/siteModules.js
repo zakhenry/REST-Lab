@@ -1,4 +1,5 @@
 angular.module('siteModules', [
-  'app.home',
-  'apiInterface'
+    // Default Site Modules
+    'app.home',
+    'apiInterface'
 ]);

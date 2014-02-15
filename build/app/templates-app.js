@@ -20,7 +20,13 @@ angular.module("_partials/navigation.tpl.html", []).run(["$templateCache", funct
     "                    <span class=\"icon-bar\"></span>\n" +
     "                    <span class=\"icon-bar\"></span>\n" +
     "                </button>\n" +
-    "                <a class=\"navbar-brand\" href=\"/\">REST Lab</a>\n" +
+    "                <a class=\"navbar-brand\" href=\"/\">\n" +
+    "                    <span class=\"fa-stack fa-lg\">\n" +
+    "                      <!--<i class=\"fa fa-square fa-stack-2x\"></i>-->\n" +
+    "                      <i class=\"fa fa-flask fa-stack-2x fa-inverse\"></i>\n" +
+    "                      <i class=\"fa fa-wrench fa-stack-1x\"></i>\n" +
+    "                    </span>\n" +
+    "                    REST Lab</a>\n" +
     "            </div>\n" +
     "\n" +
     "            <!-- Collect the nav links, forms, and other content for toggling -->\n" +

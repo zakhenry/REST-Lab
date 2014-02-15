@@ -55,11 +55,19 @@
 
 
 //Font awesome
-@import "../vendor/font-awesome/less/variables.less";
-@import 'font-awesome-override.less';
-@import "../vendor/font-awesome/less/mixins.less";
-@import "../vendor/font-awesome/less/path.less";
-@import "../vendor/font-awesome/less/core.less";
-@import "../vendor/font-awesome/less/bootstrap.less";
-@import "../vendor/font-awesome/less/extras.less";
-@import "../vendor/font-awesome/less/icons.less";
+
+@import "../vendor/font-awesome/less/variables";
+
+@import 'font-awesome-override.less'; //override the fa path variables so the app can locate the font path
+
+@import "../vendor/font-awesome/less/mixins";
+@import "../vendor/font-awesome/less/path";
+@import "../vendor/font-awesome/less/core";
+@import "../vendor/font-awesome/less/larger";
+@import "../vendor/font-awesome/less/fixed-width";
+@import "../vendor/font-awesome/less/list";
+@import "../vendor/font-awesome/less/bordered-pulled";
+@import "../vendor/font-awesome/less/spinning";
+@import "../vendor/font-awesome/less/rotated-flipped";
+@import "../vendor/font-awesome/less/stacked";
+@import "../vendor/font-awesome/less/icons";

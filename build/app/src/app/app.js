@@ -1,23 +1,27 @@
 angular.module('app', [
-  'templates-app',
-  'templates-common',
-  'vendorModules',
-  'commonModules',
-  'stateManager'
-]).run([
-  'titleService',
-  function run(titleService) {
-    titleService.setSuffix(' \xbb REST Lab');
-    moment.lang('en-gb');
-  }
-]).controller('AppCtrl', [
-  '$scope',
-  '$rootScope',
-  '$localStorage',
-  '$http',
-  function ($scope, $rootScope, $localStorage, $http) {
-    $rootScope.$storage = $localStorage;
-    console.log('localstorage bound');
-  }
-]);
+        // Templates
+        'templates-app',
+        'templates-common',
+        // Vendor Modules - Live under /vendor
+        'vendorModules',
+        // Common Modules - Live under /src/common
+        'commonModules',
+        // State Manager
+        'stateManager'
+    ])
+    .run(function run(titleService) {
+        titleService.setSuffix(' » REST Lab');
+        moment.lang('en-gb');
+    })
+
+    .controller('AppCtrl', function($scope, $rootScope, $localStorage, $http) {
+
+
+        $rootScope.$storage = $localStorage;
+
+
+        console.log('localstorage bound');
+
+
+    })
 ;
