@@ -1,0 +1,14 @@
+RewriteEngine on
+
+RewriteBase /
+
+# Files and directories receive priority
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule (.*) - [L]
+
+# API Connections
+RewriteRule ^api/(.*) api/index.php [QSA,L]
+
+# Angular JS for everything else
+RewriteRule (.*) index.html [QSA,L]
