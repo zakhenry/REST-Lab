@@ -19,6 +19,13 @@ angular.module('app', [
 
         $rootScope.$storage = $localStorage;
 
+        if (_.isUndefined($rootScope.$storage.restLab)){ //storage is empty (never been created)
+
+            $rootScope.$storage.restLab = {
+                projects : []
+            };
+
+        }
 
         console.log('localstorage bound');
 
