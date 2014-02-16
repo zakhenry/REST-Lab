@@ -28,7 +28,7 @@ module.exports = {
 
         html: ['src/index.html'],
 
-        app_less: ['src/global.less', 'src/app/**/*.less'],
+        app_less: ['src/global.less', 'src/app/**/*.less', 'src/common/**/*.less'],
 
         files_from_src: ['.htaccess']
     },

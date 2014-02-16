@@ -413,7 +413,8 @@ module.exports = function (grunt) {
                     '<%= build_dir %>/vendor/**/*.css',
                     '<%= build_dir %>/local_vendor/**/*.css',
                     '<%= build_dir %>/src/global.css',
-                    '<%= build_dir %>/src/app/**/*.css'
+                    '<%= build_dir %>/src/app/**/*.css',
+                    '<%= build_dir %>/src/common/**/*.css'
                 ]
             },
 
