@@ -37,13 +37,15 @@ angular.module('app.projects', [])
                     .replace(/ +/g,'-')
                 ;
 
+                $scope.addProjectForm.projectKey.$setViewValue($scope.addProjectForm.projectKey.$viewValue); //dirty hack to setdirty
+//                $scope.addProjectForm.projectKey.$setDirty();
                 var existing = _.find($scope.$storage.restLab.projects, {key:$scope.newProject.key});
+                $scope.addProjectForm.projectKey.$setValidity('keyExists', !existing);
 
-                if (existing){
-                    $scope.addProjectForm.projectKey.$setValidity('keyExists', false);
-                }else{
-                    $scope.addProjectForm.projectKey.$setValidity('keyExists', true);
-                }
+                $scope.addProjectForm.projectKey.$setValidity('keyLength', $scope.newProject.key.length!==0);
+
+            }else{
+                $scope.newProject.key = '';
             }
 
         });

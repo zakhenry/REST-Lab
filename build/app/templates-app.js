@@ -113,27 +113,44 @@ angular.module("projects/projects.tpl.html", []).run(["$templateCache", function
     "        <h2>Add new project</h2>\n" +
     "        <ng-form name=\"addProjectForm\" role=\"form\" class=\"form-horizontal\">\n" +
     "\n" +
-    "            <div class=\"form-group\">\n" +
+    "            <div class=\"form-group\" ng-class=\"{'has-error':addProjectForm.projectName.$dirty && addProjectForm.projectName.$invalid}\">\n" +
     "                <label for=\"projectName\" class=\"col-sm-2 control-label\">Project Name</label>\n" +
     "                <div class=\"col-sm-8\">\n" +
     "                    <input type=\"text\" ng-model=\"newProject.name\" class=\"form-control\" id=\"projectName\" name=\"projectName\" placeholder=\"Enter project name\" required>\n" +
     "                </div>\n" +
-    "                <div class=\"col-sm-2 validation\" ng-show=\"addProjectForm.projectName.$invalid && addProjectForm.projectName.$dirty\">* Required</div>\n" +
+    "                <span class=\"help-block\" ng-show=\"addProjectForm.projectName.$invalid && addProjectForm.projectName.$dirty\">* Required</span>\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group\">\n" +
+    "            <div class=\"form-group\" ng-class=\"{'has-error':addProjectForm.projectKey.$dirty && addProjectForm.projectKey.$invalid}\">\n" +
     "                <label for=\"projectKey\" class=\"col-sm-2 control-label\">Project Key</label>\n" +
     "                <div class=\"col-sm-8\">\n" +
     "                    <input disabled type=\"text\" ng-model=\"newProject.key\" class=\"form-control\" id=\"projectKey\" name=\"projectKey\" placeholder=\"Project key is determined by project name\">\n" +
     "                </div>\n" +
-    "                <div class=\"col-sm-2 validation\" ng-show=\"addProjectForm.projectKey.$invalid\">Project key already exists</div>\n" +
+    "                <span class=\"help-block\" ng-show=\"addProjectForm.projectKey.$error.keyExists\">Project key already exists</span>\n" +
+    "                <span class=\"help-block\" ng-show=\"addProjectForm.projectKey.$error.keyLength\">Project key invalid</span>\n" +
     "            </div>\n" +
     "\n" +
-    "            <button ng-disabled=\"!addProjectForm.$dirty && addProjectForm.$invalid\" class=\"btn btn-primary\" ng-click=\"addProject(newProject)\">Submit</button>\n" +
+    "            <div class=\"form-group\" ng-class=\"{'has-error':addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$invalid}\">\n" +
+    "                <label for=\"projectBaseUrl\" class=\"col-sm-2 control-label\">Project Base URL</label>\n" +
+    "                <div class=\"col-sm-8\">\n" +
+    "                    <div class=\"input-group\">\n" +
+    "                        <div class=\"input-group-btn\">\n" +
+    "                            <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span> {{newProject.url.protocol || 'Protocol'}}</button>\n" +
+    "                            <ul class=\"dropdown-menu\">\n" +
+    "                                <li><a ng-click=\"newProject.url.protocol = 'http://'\">http://</a></li>\n" +
+    "                                <li><a ng-click=\"newProject.url.protocol = 'https://'\">https://</a></li>\n" +
+    "                            </ul>\n" +
+    "                        </div><!-- /btn-group -->\n" +
+    "                        <input type=\"text\" ng-model=\"newProject.url.base\" class=\"form-control\" id=\"projectBaseUrl\" name=\"projectBaseUrl\" placeholder=\"Base URL of the project\" required>\n" +
+    "                    </div><!-- /input-group -->\n" +
+    "                </div>\n" +
+    "                <span class=\"help-block\" ng-show=\"addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.required\">* Required</span>\n" +
+    "                <span class=\"help-block\" ng-show=\"addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.urlInvalid\">Invalid url</span>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <button ng-disabled=\"!addProjectForm.$dirty || addProjectForm.$invalid\" class=\"btn btn-primary\" ng-click=\"addProject(newProject)\">Submit</button>\n" +
     "\n" +
     "        </ng-form>\n" +
-    "        <pre>{{newProject|json}}</pre>\n" +
-    "        <pre>{{addProjectForm|json}}</pre>\n" +
     "    </div>\n" +
     "\n" +
     "    <pre>{{$storage.restLab.projects|json}}</pre>\n" +
