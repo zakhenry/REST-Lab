@@ -14,8 +14,7 @@ angular.module('app', [
         moment.lang('en-gb');
     })
 
-    .controller('AppCtrl', function($scope, $rootScope, $localStorage, $http) {
-
+    .controller('AppCtrl', function($scope, $rootScope, $localStorage) {
 
         $rootScope.$storage = $localStorage;
 

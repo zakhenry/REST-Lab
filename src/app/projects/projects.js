@@ -1,6 +1,6 @@
 
 
-angular.module('app.projects', [])
+angular.module('app.projects', ['app.projects.endpoints'])
 
     .config(function(stateHelperProvider) {
         stateHelperProvider.addState('defaultLayout.projects', {
@@ -18,7 +18,14 @@ angular.module('app.projects', [])
     .controller('ProjectsCtrl', function($rootScope, $scope, $location) {
 
         $scope.projectFormMode = 'new';
-        $scope.newProject = {};
+        var defaultProject = {
+            url : {
+                port:80,
+                protocol: 'http://'
+            }
+        };
+
+        $scope.newProject = defaultProject;
         $scope.addFormVisible = $scope.$storage.restLab.projects.length === 0; //default to show when there are no projects
 
         $scope.showAddForm = function(show){
@@ -26,7 +33,7 @@ angular.module('app.projects', [])
             $scope.projectFormMode = 'new';
 
 
-            $scope.newProject = {}; //clear
+            $scope.newProject = defaultProject; //clear
             $scope.addProjectForm.$setPristine();
         };
 
@@ -64,6 +71,11 @@ angular.module('app.projects', [])
 
         });
 
+        var projectDefaults = {
+            endpoints: [],
+            tests: []
+        };
+
         $scope.addProject = function(project){
             if ($scope.projectFormMode == 'edit'){
                 project.updated = moment();
@@ -74,10 +86,11 @@ angular.module('app.projects', [])
             }else{
                 project.created = moment();
                 project.statsGraph = getProjectBarGraph(project);
+                project = _.merge(project, projectDefaults);
                 $scope.$storage.restLab.projects.push(project);
             }
 
-            $scope.newProject = {};
+            $scope.newProject = defaultProject;
             $scope.addProjectForm.$setPristine();
             $scope.addFormVisible = false;
         };

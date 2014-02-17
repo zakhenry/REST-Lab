@@ -28,7 +28,7 @@
 
             <div class="form-group" ng-class="{'has-error':addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$invalid}">
                 <label for="projectBaseUrl" class="col-sm-2 control-label">Project Base URL</label>
-                <div class="col-sm-8">
+                <div class="col-sm-6">
                     <div class="input-group">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span> {{newProject.url.protocol || 'Protocol'}}</button>
@@ -39,6 +39,10 @@
                         </div><!-- /btn-group -->
                         <input type="text" ng-model="newProject.url.host" class="form-control" id="projectBaseUrl" name="projectBaseUrl" placeholder="Base URL of the project" required>
                     </div><!-- /input-group -->
+                </div>
+                <div class="col-sm-2">
+                    <label for="projectBaseUrlPort" class="control-label">Port</label>
+                    <input type="text" ng-model="newProject.url.port" class="form-control" id="projectBaseUrlPort" name="projectBaseUrlPort" placeholder="Enter port number" required>
                 </div>
                 <span class="help-block" ng-show="addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.required">* Required</span>
                 <span class="help-block" ng-show="addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.urlInvalid">Invalid url</span>
@@ -64,10 +68,17 @@
                 </span>
             </div>
 
-            <span class="row pull-right">
-                <span class="col-sm-12">
-                    <button class="btn btn-info" ng-click="showEditForm(project)">Edit Project</button>
-                    <button class="btn btn-danger" ng-show="!deleteWarning" ng-click="deleteWarning = true">Delete Project</button>
+            <span class="row">
+                <span class="col-sm-8">
+                    <a class="btn btn-info" href="/projects/{{project.key}}/endpoints">Configure Endpoints</a>
+                    <a class="btn btn-primary disabled">Configure Tests</a>
+                    <a class="btn btn-success disabled">Run Tests</a>
+                </span>
+                <span class="col-sm-4">
+                    <span class="pull-right">
+                        <button class="btn btn-info" ng-click="showEditForm(project)">Edit Project</button>
+                        <button class="btn btn-danger" ng-show="!deleteWarning" ng-click="deleteWarning = true">Delete Project</button>
+                    </span>
                 </span>
             </span>
 

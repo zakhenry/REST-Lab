@@ -1,5 +1,5 @@
 angular.module('commonModules', [
-  'titleService',
-  'stateHelper',
-  'validation'
+    'titleService',
+    'stateHelper',
+    'validation'
 ]);

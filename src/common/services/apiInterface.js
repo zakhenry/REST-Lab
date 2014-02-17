@@ -1,7 +1,6 @@
 angular.module('apiInterface', [])
-    .factory('apiInterface', function ($rootScope, $http, $q, $window, $stateParams, $location, STAGE_API_URL, $route) {
+    .factory('apiInterface', function ($rootScope, $http, $q, $window, $stateParams, $location) {
 
-        var apiUrl = STAGE_API_URL;
 
         // Private methods, namespaced for code clarity
         var privateMethod = {
@@ -21,7 +20,7 @@ angular.module('apiInterface', [])
 
                 var saveConfig = {
                     method: method,
-                    url: apiUrl + url,
+                    url:  url,
                     data: data,
                     headers: headers,
                     responseType: 'json'
@@ -71,6 +70,10 @@ angular.module('apiInterface', [])
 
             // Alias CRUD functions
 
+            options: function(url, data, headers){
+                return privateMethod.sendRequest('OPTIONS', url, data, headers);
+            },
+
             get: function(url, data, headers){
                 return privateMethod.sendRequest('GET', url, data, headers);
             },
@@ -89,32 +92,6 @@ angular.module('apiInterface', [])
 
             remove: function(url, data, headers){
                 return privateMethod.sendRequest('DELETE',url, data, headers);
-            },
-
-
-            deleteUI: function(id){
-                console.log('requested to delete', $stateParams.collectionId, '/', id);
-                $rootScope.api.deleteModal = {
-                    show: true,
-                    collection: $stateParams.collectionId,
-                    id: id,
-                    deleteConfirmed: function(){
-                        console.log('delete confirmed', this.id);
-                        publicMethods.remove('/'+this.collection+'/'+this.id);
-                        this.show = false;
-
-                        var thisPath = $location.path();
-                        var targetPath = '/api/'+this.collection;
-
-
-                        if (thisPath == targetPath){
-                            $window.location.reload();
-                        }else{
-                            $location.path(targetPath);
-                        }
-
-                    }
-                };
             }
 
         };

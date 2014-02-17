@@ -3,10 +3,13 @@ angular.module('stateManager', ['siteModules', 'stateHelper'])
         $stateProvider,
         stateHelperProvider,
         $locationProvider,
-        $urlRouterProvider
+        $urlRouterProvider,
+        $compileProvider,
+        $httpProvider
     ) {
         $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise('/');
+        $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
         // Create state for Default Layout
         $stateProvider
             .state('defaultLayout', {
