@@ -110,7 +110,7 @@ angular.module("projects/projects.tpl.html", []).run(["$templateCache", function
     "\n" +
     "    <div class=\"alert alert-info alert-dismissable\" ng-show=\"addFormVisible\">\n" +
     "        <button type=\"button\" class=\"close\" aria-hidden=\"true\" ng-click=\"showAddForm(false)\">&times;</button>\n" +
-    "        <h2>Add new project</h2>\n" +
+    "        <h2>{{projectFormMode == 'new' ? 'Add new' : 'Edit existing'}} project</h2>\n" +
     "        <ng-form name=\"addProjectForm\" role=\"form\" class=\"form-horizontal\">\n" +
     "\n" +
     "            <div class=\"form-group\" ng-class=\"{'has-error':addProjectForm.projectName.$dirty && addProjectForm.projectName.$invalid}\">\n" +
@@ -141,7 +141,7 @@ angular.module("projects/projects.tpl.html", []).run(["$templateCache", function
     "                                <li><a ng-click=\"newProject.url.protocol = 'https://'\">https://</a></li>\n" +
     "                            </ul>\n" +
     "                        </div><!-- /btn-group -->\n" +
-    "                        <input type=\"text\" ng-model=\"newProject.url.base\" class=\"form-control\" id=\"projectBaseUrl\" name=\"projectBaseUrl\" placeholder=\"Base URL of the project\" required>\n" +
+    "                        <input type=\"text\" ng-model=\"newProject.url.host\" class=\"form-control\" id=\"projectBaseUrl\" name=\"projectBaseUrl\" placeholder=\"Base URL of the project\" required>\n" +
     "                    </div><!-- /input-group -->\n" +
     "                </div>\n" +
     "                <span class=\"help-block\" ng-show=\"addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.required\">* Required</span>\n" +
@@ -149,11 +149,46 @@ angular.module("projects/projects.tpl.html", []).run(["$templateCache", function
     "            </div>\n" +
     "\n" +
     "            <button ng-disabled=\"!addProjectForm.$dirty || addProjectForm.$invalid\" class=\"btn btn-primary\" ng-click=\"addProject(newProject)\">Submit</button>\n" +
+    "            <button class=\"btn\" ng-click=\"showAddForm(false)\">Cancel</button>\n" +
     "\n" +
     "        </ng-form>\n" +
     "    </div>\n" +
     "\n" +
-    "    <pre>{{$storage.restLab.projects|json}}</pre>\n" +
+    "    <div class=\"panel panel-default\" ng-repeat=\"project in $storage.restLab.projects\">\n" +
+    "        <div class=\"panel-body\">\n" +
+    "            <h3>{{project.name}} - {{project.url.protocol+project.url.host}}</h3>\n" +
+    "            <div class=\"row\">\n" +
+    "                <span class=\"col-sm-2\"><h4>Test statistics</h4></span>\n" +
+    "                <span class=\"col-sm-10\">\n" +
+    "                    <progress>\n" +
+    "                        <bar ng-repeat=\"bar in project.statsGraph\" value=\"bar.value\" type=\"{{bar.type}}\">\n" +
+    "                            <span ng-hide=\"bar.value < 5\">{{bar.name}} {{bar.value}}%</span>\n" +
+    "                        </bar>\n" +
+    "                    </progress>\n" +
+    "                </span>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <span class=\"row pull-right\">\n" +
+    "                <span class=\"col-sm-12\">\n" +
+    "                    <button class=\"btn btn-info\" ng-click=\"showEditForm(project)\">Edit Project</button>\n" +
+    "                    <button class=\"btn btn-danger\" ng-show=\"!deleteWarning\" ng-click=\"deleteWarning = true\">Delete Project</button>\n" +
+    "                </span>\n" +
+    "            </span>\n" +
+    "\n" +
+    "            <div class=\"row\">\n" +
+    "                <div class=\"alert alert-danger col-sm-12\" ng-show=\"deleteWarning\">\n" +
+    "                    <button type=\"button\" class=\"close\" aria-hidden=\"true\" ng-click=\"deleteWarning = false\">&times;</button>\n" +
+    "                    <h4>Deleting project!</h4>\n" +
+    "                    <p>Caution, deleting a project is irreversable - you will lose all endpoints and test results. Are you really sure you want to do this?</p>\n" +
+    "                    <button class=\"btn btn-danger\" ng-click=\"deleteProject(project)\">Yes I'm sure, delete this project</button>\n" +
+    "                    <button class=\"btn btn-info\" ng-click=\"deleteWarning = false\">No!, Take me back to safety</button>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "\n" +
+    "        </div>\n" +
+    "\n" +
+    "    </div>\n" +
+    "\n" +
     "\n" +
     "\n" +
     "</div>");

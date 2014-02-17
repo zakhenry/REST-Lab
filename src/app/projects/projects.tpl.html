@@ -6,7 +6,7 @@
 
     <div class="alert alert-info alert-dismissable" ng-show="addFormVisible">
         <button type="button" class="close" aria-hidden="true" ng-click="showAddForm(false)">&times;</button>
-        <h2>Add new project</h2>
+        <h2>{{projectFormMode == 'new' ? 'Add new' : 'Edit existing'}} project</h2>
         <ng-form name="addProjectForm" role="form" class="form-horizontal">
 
             <div class="form-group" ng-class="{'has-error':addProjectForm.projectName.$dirty && addProjectForm.projectName.$invalid}">
@@ -37,7 +37,7 @@
                                 <li><a ng-click="newProject.url.protocol = 'https://'">https://</a></li>
                             </ul>
                         </div><!-- /btn-group -->
-                        <input type="text" ng-model="newProject.url.base" class="form-control" id="projectBaseUrl" name="projectBaseUrl" placeholder="Base URL of the project" required>
+                        <input type="text" ng-model="newProject.url.host" class="form-control" id="projectBaseUrl" name="projectBaseUrl" placeholder="Base URL of the project" required>
                     </div><!-- /input-group -->
                 </div>
                 <span class="help-block" ng-show="addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.required">* Required</span>
@@ -45,11 +45,46 @@
             </div>
 
             <button ng-disabled="!addProjectForm.$dirty || addProjectForm.$invalid" class="btn btn-primary" ng-click="addProject(newProject)">Submit</button>
+            <button class="btn" ng-click="showAddForm(false)">Cancel</button>
 
         </ng-form>
     </div>
 
-    <pre>{{$storage.restLab.projects|json}}</pre>
+    <div class="panel panel-default" ng-repeat="project in $storage.restLab.projects">
+        <div class="panel-body">
+            <h3>{{project.name}} - {{project.url.protocol+project.url.host}}</h3>
+            <div class="row">
+                <span class="col-sm-2"><h4>Test statistics</h4></span>
+                <span class="col-sm-10">
+                    <progress>
+                        <bar ng-repeat="bar in project.statsGraph" value="bar.value" type="{{bar.type}}">
+                            <span ng-hide="bar.value < 5">{{bar.name}} {{bar.value}}%</span>
+                        </bar>
+                    </progress>
+                </span>
+            </div>
+
+            <span class="row pull-right">
+                <span class="col-sm-12">
+                    <button class="btn btn-info" ng-click="showEditForm(project)">Edit Project</button>
+                    <button class="btn btn-danger" ng-show="!deleteWarning" ng-click="deleteWarning = true">Delete Project</button>
+                </span>
+            </span>
+
+            <div class="row">
+                <div class="alert alert-danger col-sm-12" ng-show="deleteWarning">
+                    <button type="button" class="close" aria-hidden="true" ng-click="deleteWarning = false">&times;</button>
+                    <h4>Deleting project!</h4>
+                    <p>Caution, deleting a project is irreversable - you will lose all endpoints and test results. Are you really sure you want to do this?</p>
+                    <button class="btn btn-danger" ng-click="deleteProject(project)">Yes I'm sure, delete this project</button>
+                    <button class="btn btn-info" ng-click="deleteWarning = false">No!, Take me back to safety</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
 
 
 </div>
