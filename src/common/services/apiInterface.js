@@ -26,26 +26,24 @@ angular.module('apiInterface', [])
                     responseType: 'json'
                 };
 
-                $http(saveConfig).success(function (data, status, headers, config) {
+                $http(saveConfig).success(function (responseData, responseStatus, responseHeaders, responseConfig) {
                     console.log('$http method success');
 //                    debugger;
                     deferred.resolve({
-                        origin: 'remote',
-                        data:data,
-                        status:status,
-                        headers:headers,
-                        config:config
+                        data:responseData,
+                        status:responseStatus,
+                        headers:responseHeaders,
+                        config:responseConfig
                     });
 
-                }).error(function(data, status, headers, config){
+                }).error(function(errorData, errorStatus, errorHeaders, errorConfig){
                         console.log('$http method error');
 //                        debugger;
                     deferred.reject({
-                        origin: 'remote',
-                        data:data,
-                        status:status,
-                        headers:headers,
-                        config:config
+                        data:errorData,
+                        status:errorStatus,
+                        headers:errorHeaders,
+                        config:errorConfig
                     });
                 });
 

@@ -104,14 +104,14 @@ angular.module("projects/endpoints/endpoints.tpl.html", []).run(["$templateCache
     "                <div class=\"col-sm-8\">\n" +
     "                    <div class=\"input-group\">\n" +
     "                        <span class=\"input-group-addon\">{{project.url.protocol}}{{project.url.host}}:{{project.url.port}}</span>\n" +
-    "                        <input type=\"text\" ng-model=\"newEndpoint.uri\" class=\"form-control\" id=\"endpointUri\" name=\"endpointUri\" placeholder=\"/example\" required>\n" +
+    "                        <input type=\"text\" ng-model=\"newEndpoint.uri.definition\" class=\"form-control\" id=\"endpointUri\" name=\"endpointUri\" placeholder=\"/example\" required>\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "                <span class=\"help-block\" ng-show=\"addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$error.uriExists\">Endpoint already exists</span>\n" +
     "                <span class=\"help-block\" ng-show=\"addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$error.required\">Endpoint too short</span>\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group\" ng-class=\"{'has-error':addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$invalid}\">\n" +
+    "            <div class=\"form-group\">\n" +
     "                <label for=\"endpointUri\" class=\"col-sm-2 control-label\">Endpoint Methods</label>\n" +
     "                <div class=\"col-sm-8\">\n" +
     "                    <button class=\"btn btn-info\" ng-click=\"autodetectMethods(project, newEndpoint)\">Autodetect <i class=\"fa fa-question-circle\" tooltip=\"Auto fill the methods with an OPTIONS request to the endpoint defined above\"></i> </button>\n" +
@@ -119,19 +119,26 @@ angular.module("projects/endpoints/endpoints.tpl.html", []).run(["$templateCache
     "                        <input type=\"checkbox\" ng-model=\"newEndpoint.methods[method]\" name=\"endpointMethod\"> {{method}}\n" +
     "                    </label>\n" +
     "                </div>\n" +
-    "                <span class=\"help-block\" ng-show=\"addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$error.uriExists\">Endpoint already exists</span>\n" +
-    "                <span class=\"help-block\" ng-show=\"addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$error.required\">Endpoint too short</span>\n" +
     "            </div>\n" +
     "\n" +
     "            <button ng-disabled=\"!addEndpointForm.$dirty || addEndpointForm.$invalid\" class=\"btn btn-primary\" ng-click=\"addEndpoint(newEndpoint)\">Submit</button>\n" +
     "            <button class=\"btn\" ng-click=\"showAddForm(false)\">Cancel</button>\n" +
-    "<pre>{{newEndpoint|json}}</pre>\n" +
     "        </ng-form>\n" +
     "    </div>\n" +
     "\n" +
     "    <div class=\"panel panel-default\" ng-repeat=\"endpoint in project.endpoints\">\n" +
     "        <div class=\"panel-body\">\n" +
-    "            <h3>{{endpoint.uri}}</h3>\n" +
+    "            <h3 class=\"endpoint-title\">\n" +
+    "                <span ng-repeat=\"element in endpoint.uri.breakdown\">\n" +
+    "                    <code class=\"variable\" ng-if=\"element.type == 'variable'\">[{{element.val}}]</code>\n" +
+    "                    <span class=\"segment\" ng-if=\"element.type == 'segment'\">{{element.val}}</span>\n" +
+    "                </span>\n" +
+    "            </h3>\n" +
+    "\n" +
+    "            <span class=\"row\">\n" +
+    "                <h4>Methods</h4>\n" +
+    "                <button class=\"btn btn-default\" ng-repeat=\"(method,enabled) in endpoint.methods track by method\" ng-show=\"enabled == true\">{{method}}</button>\n" +
+    "            </span>\n" +
     "\n" +
     "            <span class=\"row\">\n" +
     "                <span class=\"col-sm-8\">\n" +
@@ -160,8 +167,6 @@ angular.module("projects/endpoints/endpoints.tpl.html", []).run(["$templateCache
     "\n" +
     "    </div>\n" +
     "\n" +
-    "\n" +
-    "    <pre>{{$storage.restLab|json}}</pre>\n" +
     "\n" +
     "</div>");
 }]);

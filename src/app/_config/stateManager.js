@@ -4,8 +4,7 @@ angular.module('stateManager', ['siteModules', 'stateHelper'])
         stateHelperProvider,
         $locationProvider,
         $urlRouterProvider,
-        $compileProvider,
-        $httpProvider
+        $compileProvider
     ) {
         $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise('/');

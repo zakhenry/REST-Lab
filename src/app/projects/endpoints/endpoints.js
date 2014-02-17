@@ -22,6 +22,11 @@ angular.module('app.projects.endpoints', [])
         $scope.project = project;
 
         var emptyEndpoint = {
+            uri: {
+                key: null,
+                definition: null,
+                breakdown: null
+            },
             methods: {
                 OPTIONS : false,
                 GET : false,
@@ -58,17 +63,41 @@ angular.module('app.projects.endpoints', [])
             $scope.addEndpointForm.$setPristine();
         };
 
-        $scope.$watch('newEndpoint.uri', function(name){
+        $scope.$watch('newEndpoint.uri.definition', function(name){
             var existing = false;
             if (name){
 
-                existing = _.find(project.endpoints, {uri:$scope.newEndpoint.uri});
-                if (!!existing && $scope.endpointFormMode == 'edit' && existing.uri == $scope.newEndpoint.uri){
+                var variableRegex = /(\[.*?\])/g;
+                var splitUri = name.split(variableRegex);
+
+                var uriObject = _.map(splitUri, function(piece){
+                    var match = piece.match(/\[(.*?)\]/);
+                    var type = 'segment';
+                    if (match){
+                        piece = match[1];
+                        type = 'variable';
+                    }
+                    return {
+                        type: type,
+                        val: piece
+                    };
+                });
+
+                $scope.newEndpoint.uri.key = _.pluck(_.filter(uriObject, {type:'segment'}), 'val').join('');
+
+                existing = _.find(project.endpoints, function(endpoint){
+                    return endpoint.uri.key == $scope.newEndpoint.uri.key;
+                });
+
+                if (!!existing && $scope.endpointFormMode == 'edit' && existing.uri.key == $scope.newEndpoint.uri.key){
                     existing = false;
                 }
 
+                $scope.newEndpoint.uri.breakdown = uriObject;
+
             }
             $scope.addEndpointForm.endpointUri.$setValidity('uriExists', !existing);
+            $scope.addEndpointForm.endpointUri.$setValidity('uriValid', !!$scope.newEndpoint.uri.breakdown);
 
 
         });
@@ -96,15 +125,14 @@ angular.module('app.projects.endpoints', [])
 
         $scope.autodetectMethods = function(project, endpoint){
 
-            var url = project.url.protocol + project.url.host + ':'+project.url.port + endpoint.uri;
+            var url = project.url.protocol + project.url.host + ':'+project.url.port + endpoint.uri.definition;
             apiInterface.options(url).then(function(response){
-                console.log(response);
-            });
+                var headers = response.headers();
+                var allowedMethods = headers.allow.split(', ');
 
-            var response = ['HEAD','GET','DELETE'];
-
-            endpoint.methods = _.mapValues(endpoint.methods, function(validity,method){
-                return response.indexOf(method) !== -1;
+                endpoint.methods = _.mapValues(endpoint.methods, function(validity,method){
+                    return allowedMethods.indexOf(method) !== -1;
+                });
             });
 
             $scope.addEndpointForm.endpointMethod.$setViewValue($scope.addEndpointForm.endpointMethod.$viewValue); //dirty hack to setdirty

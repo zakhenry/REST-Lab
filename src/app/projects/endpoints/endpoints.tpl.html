@@ -14,14 +14,14 @@
                 <div class="col-sm-8">
                     <div class="input-group">
                         <span class="input-group-addon">{{project.url.protocol}}{{project.url.host}}:{{project.url.port}}</span>
-                        <input type="text" ng-model="newEndpoint.uri" class="form-control" id="endpointUri" name="endpointUri" placeholder="/example" required>
+                        <input type="text" ng-model="newEndpoint.uri.definition" class="form-control" id="endpointUri" name="endpointUri" placeholder="/example" required>
                     </div>
                 </div>
                 <span class="help-block" ng-show="addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$error.uriExists">Endpoint already exists</span>
                 <span class="help-block" ng-show="addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$error.required">Endpoint too short</span>
             </div>
 
-            <div class="form-group" ng-class="{'has-error':addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$invalid}">
+            <div class="form-group">
                 <label for="endpointUri" class="col-sm-2 control-label">Endpoint Methods</label>
                 <div class="col-sm-8">
                     <button class="btn btn-info" ng-click="autodetectMethods(project, newEndpoint)">Autodetect <i class="fa fa-question-circle" tooltip="Auto fill the methods with an OPTIONS request to the endpoint defined above"></i> </button>
@@ -29,19 +29,26 @@
                         <input type="checkbox" ng-model="newEndpoint.methods[method]" name="endpointMethod"> {{method}}
                     </label>
                 </div>
-                <span class="help-block" ng-show="addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$error.uriExists">Endpoint already exists</span>
-                <span class="help-block" ng-show="addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$error.required">Endpoint too short</span>
             </div>
 
             <button ng-disabled="!addEndpointForm.$dirty || addEndpointForm.$invalid" class="btn btn-primary" ng-click="addEndpoint(newEndpoint)">Submit</button>
             <button class="btn" ng-click="showAddForm(false)">Cancel</button>
-<pre>{{newEndpoint|json}}</pre>
         </ng-form>
     </div>
 
     <div class="panel panel-default" ng-repeat="endpoint in project.endpoints">
         <div class="panel-body">
-            <h3>{{endpoint.uri}}</h3>
+            <h3 class="endpoint-title">
+                <span ng-repeat="element in endpoint.uri.breakdown">
+                    <code class="variable" ng-if="element.type == 'variable'">[{{element.val}}]</code>
+                    <span class="segment" ng-if="element.type == 'segment'">{{element.val}}</span>
+                </span>
+            </h3>
+
+            <span class="row">
+                <h4>Methods</h4>
+                <button class="btn btn-default" ng-repeat="(method,enabled) in endpoint.methods track by method" ng-show="enabled == true">{{method}}</button>
+            </span>
 
             <span class="row">
                 <span class="col-sm-8">
@@ -70,7 +77,5 @@
 
     </div>
 
-
-    <pre>{{$storage.restLab|json}}</pre>
 
 </div>
