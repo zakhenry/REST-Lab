@@ -4,7 +4,7 @@ angular.module('app.home', [])
 
     .config(function(stateHelperProvider) {
         stateHelperProvider.addState('defaultLayout.home', {
-            url: '/',
+            url: '/home',
             views: {
                 "main@defaultLayout": { // Points to the ui-view="main" in modal-layout.tpl.html
                     controller: 'HomeCtrl as HomeCtrl',

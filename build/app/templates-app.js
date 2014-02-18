@@ -10,78 +10,24 @@ angular.module("_partials/navigation.tpl.html", []).run(["$templateCache", funct
   $templateCache.put("_partials/navigation.tpl.html",
     "<div id=\"header\">\n" +
     "\n" +
-    "    <nav class=\"navbar navbar-default\" role=\"navigation\">\n" +
-    "        <div class=\"container-fluid\">\n" +
-    "            <!-- Brand and toggle get grouped for better mobile display -->\n" +
-    "            <div class=\"navbar-header\">\n" +
-    "                <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\">\n" +
-    "                    <span class=\"sr-only\">Toggle navigation</span>\n" +
-    "                    <span class=\"icon-bar\"></span>\n" +
-    "                    <span class=\"icon-bar\"></span>\n" +
-    "                    <span class=\"icon-bar\"></span>\n" +
-    "                </button>\n" +
-    "                <a class=\"navbar-brand\" href=\"/\">\n" +
-    "                    <span class=\"fa-stack fa-lg\">\n" +
-    "                      <i class=\"fa fa-square fa-stack-2x\"></i>\n" +
-    "                      <i class=\"fa fa-flask fa-stack-1x fa-inverse\"></i>\n" +
-    "                    </span>\n" +
-    "                    REST Lab</a>\n" +
-    "            </div>\n" +
+    "    <h1><span class=\"nav-icon\"><i class=\"icon-restlab\"></i></span>REST Lab<small> Putting your RESTful API through it's paces</small></h1>\n" +
     "\n" +
-    "            <!-- Collect the nav links, forms, and other content for toggling -->\n" +
-    "            <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n" +
-    "                <ul class=\"nav navbar-nav\">\n" +
-    "                    <li ui-route=\"/projects\" ng-class=\"{active:$uiRoute}\">\n" +
-    "                        <a href=\"/projects\">Projects</a>\n" +
-    "                    </li>\n" +
-    "                    <li ui-route=\"/endpoints\" ng-class=\"{active:$uiRoute}\">\n" +
-    "                        <a href=\"/endpoints\">Endpoints</a>\n" +
-    "                    </li>\n" +
-    "                    <!--<li class=\"dropdown\">-->\n" +
-    "                        <!--<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Dropdown <b class=\"caret\"></b></a>-->\n" +
-    "                        <!--<ul class=\"dropdown-menu\">-->\n" +
-    "                            <!--<li><a href=\"#\">Action</a></li>-->\n" +
-    "                            <!--<li><a href=\"#\">Another action</a></li>-->\n" +
-    "                            <!--<li><a href=\"#\">Something else here</a></li>-->\n" +
-    "                            <!--<li class=\"divider\"></li>-->\n" +
-    "                            <!--<li><a href=\"#\">Separated link</a></li>-->\n" +
-    "                            <!--<li class=\"divider\"></li>-->\n" +
-    "                            <!--<li><a href=\"#\">One more separated link</a></li>-->\n" +
-    "                        <!--</ul>-->\n" +
-    "                    <!--</li>-->\n" +
-    "                </ul>\n" +
-    "                <!--<form class=\"navbar-form navbar-left\" role=\"search\">-->\n" +
-    "                    <!--<div class=\"form-group\">-->\n" +
-    "                        <!--<input type=\"text\" class=\"form-control\" placeholder=\"Search\">-->\n" +
-    "                    <!--</div>-->\n" +
-    "                    <!--<button type=\"submit\" class=\"btn btn-default\">Submit</button>-->\n" +
-    "                <!--</form>-->\n" +
-    "                <!--<ul class=\"nav navbar-nav navbar-right\">-->\n" +
-    "                    <!--<li><a href=\"#\">Link</a></li>-->\n" +
-    "                    <!--<li class=\"dropdown\">-->\n" +
-    "                        <!--<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Dropdown <b class=\"caret\"></b></a>-->\n" +
-    "                        <!--<ul class=\"dropdown-menu\">-->\n" +
-    "                            <!--<li><a href=\"#\">Action</a></li>-->\n" +
-    "                            <!--<li><a href=\"#\">Another action</a></li>-->\n" +
-    "                            <!--<li><a href=\"#\">Something else here</a></li>-->\n" +
-    "                            <!--<li class=\"divider\"></li>-->\n" +
-    "                            <!--<li><a href=\"#\">Separated link</a></li>-->\n" +
-    "                        <!--</ul>-->\n" +
-    "                    <!--</li>-->\n" +
-    "                <!--</ul>-->\n" +
-    "            </div><!-- /.navbar-collapse -->\n" +
-    "        </div><!-- /.container-fluid -->\n" +
-    "    </nav>\n" +
+    "</div>\n" +
     "\n" +
-    "\n" +
-    "</div>");
+    "<i class=\"icon-restlab background\"></i>");
 }]);
 
 angular.module("home/home.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("home/home.tpl.html",
     "<div class=\"container\">\n" +
     "\n" +
-    "    <h1>REST Lab<small> Putting your RESTful API through it's paces</small></h1>\n" +
+    "    <h1><span class=\"home-icon\"><i class=\"icon-restlab\"></i></span>REST Lab<small> Putting your RESTful API through it's paces</small></h1>\n" +
+    "\n" +
+    "    <div class=\"panel\">\n" +
+    "        <h2>Projects <small>Where your projects are duh</small></h2>\n" +
+    "    </div>\n" +
+    "\n" +
+    "\n" +
     "\n" +
     "</div>");
 }]);

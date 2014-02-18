@@ -1,6 +1,7 @@
 angular.module('siteModules', [
-  'app.home',
-  'app.projects',
-  'apiInterface',
-  'restlabIcon'
+    // Default Site Modules
+    'app.home',
+    'app.projects',
+    'apiInterface',
+    'restlabIcon'
 ]);

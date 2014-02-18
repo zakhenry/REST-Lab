@@ -7,7 +7,7 @@ angular.module('stateManager', ['siteModules', 'stateHelper'])
         $compileProvider
     ) {
         $locationProvider.html5Mode(true);
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/projects');
         $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
         // Create state for Default Layout
         $stateProvider

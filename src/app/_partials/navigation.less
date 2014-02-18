@@ -1,0 +1,49 @@
+
+/* color scheme */
+
+@cs-grey : #80838C;
+@cs-darkblue : #506F8D;
+@cs-white : #DCE7F1;
+@cs-lightbrown : #BE936B;
+@cs-darkbrown : #59493E;
+
+
+#header{
+  height: 60px;
+  padding: 2px;
+  background-color: @cs-darkblue;
+
+  h1{
+    position: relative;
+    top: -18px;
+    small{
+      position: relative;
+      top: -10px;
+    }
+  }
+
+  *{
+    color: @cs-white
+  }
+}
+
+.nav-icon{
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  text-align: center;
+  .icon-restlab{
+    line-height: 48px;
+    font-size: 40px;
+    color: @cs-white;
+  }
+}
+
+.icon-restlab.background{
+  position: absolute;
+  top: 200px;
+  right: -200px;
+  color: #fff;
+  opacity: 0.3;
+  font-size: 1000px;
+}

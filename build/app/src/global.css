@@ -8851,3 +8851,23 @@ td.visible-print {
 .fa-plus-square-o:before {
   content: "\f196";
 }
+
+/* color scheme */
+
+body {
+  background-color: #dce7f1;
+}
+
+body h1,
+body h2,
+body h3,
+body h4 {
+  color: #59493e;
+}
+
+body h1 small,
+body h2 small,
+body h3 small,
+body h4 small {
+  color: #80838c;
+}
