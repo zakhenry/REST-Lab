@@ -1,0 +1,45 @@
+
+
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3>{{project.name}} - {{project.url.protocol+project.url.host+':'+project.url.port}}</h3>
+            <div class="row">
+                <span class="col-sm-2"><h4>Test statistics</h4></span>
+                <span class="col-sm-10">
+                    <progress class="progress-striped">
+                        <bar ng-repeat="bar in project.statsGraph" value="bar.value" type="{{bar.type}}">
+                            <span ng-hide="bar.value < 5">{{bar.name}} {{bar.value}}% </span>({{bar.count}})
+                        </bar>
+                    </progress>
+                </span>
+            </div>
+
+            <span class="row">
+                <span class="col-sm-8">
+                    <a class="btn btn-info" href="/projects/{{project.key}}/endpoints">Configure Endpoints</a>
+                    <a class="btn btn-primary disabled">Configure Tests</a>
+                    <a class="btn btn-success disabled">Run Tests</a>
+                </span>
+                <span class="col-sm-4">
+                    <span class="pull-right">
+                        <button class="btn btn-info" ng-click="showEditForm(project)">Edit Project</button>
+                        <button class="btn btn-danger" ng-show="!deleteWarning" ng-click="deleteWarning = true">Delete Project</button>
+                    </span>
+                </span>
+            </span>
+
+            <div class="row">
+                <div class="alert alert-danger col-sm-12" ng-show="deleteWarning">
+                    <button type="button" class="close" aria-hidden="true" ng-click="deleteWarning = false">&times;</button>
+                    <h4>Deleting project!</h4>
+                    <p>Caution, deleting a project is irreversable - you will lose all endpoints and test results. Are you really sure you want to do this?</p>
+                    <button class="btn btn-danger" ng-click="deleteProject(project)">Yes I'm sure, delete this project</button>
+                    <button class="btn btn-info" ng-click="deleteWarning = false">No!, Take me back to safety</button>
+                </div>
+                <div ui-view="editProject" ng-animate="'fade'"></div>
+            </div>
+
+        </div>
+
+    </div>

@@ -16,6 +16,7 @@ module.exports = function ( karma ) {
       'vendor/angular-ui-router/release/angular-ui-router.js',
       'vendor/angular-ui-utils/modules/route/route.js',
       'vendor/lodash/dist/lodash.js',
+      'vendor/restangular/dist/restangular.js',
       'vendor/moment/min/moment.min.js',
       'vendor/moment/min/lang/en-gb.js',
       'vendor/ngstorage/ngStorage.js',

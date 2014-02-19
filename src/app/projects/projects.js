@@ -7,45 +7,155 @@ angular.module('app.projects', ['app.projects.endpoints'])
             url: '/projects',
             views: {
                 "main@defaultLayout": { // Points to the ui-view="main" in modal-layout.tpl.html
-                    controller: 'ProjectsCtrl as ProjectsCtrl',
+                    controller: 'AllProjectsCtrl as AllProjectsCtrl',
                     templateUrl: 'projects/projects.tpl.html'
+                },
+                "projectView@defaultLayout.projects": {
+                    controller: 'OneProjectCtrl as OneProjectCtrl',
+                    templateUrl: 'projects/project.tpl.html'
+                },
+                "editProject@defaultLayout.projects": {
+                    controller: 'EditProjectCtrl as EditProjectCtrl',
+                    templateUrl: 'projects/edit-project.tpl.html'
                 }
             }
 
         });
     })
 
-    .controller('ProjectsCtrl', function($rootScope, $scope, $location) {
+    .controller('AllProjectsCtrl', function($rootScope, $scope, $location) {
 
+
+        $scope.addProjectMode = $scope.$storage.restLab.projects.length === 0; //default to show when there are no projects
+//        $scope.addProjectMode = true;
+
+        $scope.$on('projectChange', function(event, project){
+            console.log('detected project edit',project);
+            $scope.$broadcast('projectEdit', project); //fwd message to the children
+        });
+
+        $scope.$on('projectAddFormClosed', function(){
+            if ($scope.projectFormMode == 'add'){
+                $scope.addProjectMode = false;
+            }
+
+        });
+
+        $scope.showAddProjectForm = function(){
+            $scope.addProjectMode = true;
+            $scope.$broadcast('projectAdd'); //fwd message to the children
+        };
+
+        var calculateRounding = function(list, target) {
+            var off = target - _.reduce(list, function(acc, x) { return acc + Math.round(x); }, 0);
+            return _.chain(list).
+                sortBy(function(x) { return Math.round(x) - x; }).
+                map(function(x, i) { return Math.round(x) + (off > i) - (i >= (list.length + off)); }).
+                value();
+        };
+
+        var getProjectBarGraph = function(project){
+            var testStats =  {
+                passed : _.random(0,30),
+                failed : _.random(0,30),
+                untested: _.random(0,30)
+            }; //@todo tmp
+            var totalTests = testStats.passed + testStats.failed + testStats.untested;
+
+            var roundingCalc = calculateRounding(
+                [
+                    Math.round(testStats.passed/totalTests * 100),
+                    Math.round(testStats.failed/totalTests * 100),
+                    Math.round(testStats.untested/totalTests * 100)
+                ],
+                100);
+
+            return [
+                {
+                    name: 'Passed',
+                    value: roundingCalc[0],
+                    count: testStats.passed,
+                    type: 'success'
+                },
+                {
+                    name: 'Failed',
+                    value: roundingCalc[1],
+                    count: testStats.failed,
+                    type: 'danger'
+                },
+                {
+                    name: 'Untested',
+                    value: roundingCalc[2],
+                    count: testStats.untested,
+                    type: 'info'
+                }
+            ];
+        };
+
+        _.forEach($scope.$storage.restLab.projects, function(project){
+            project.statsGraph = getProjectBarGraph(project); //called every time as this will likely be updated frequently
+        });
+
+    })
+
+    .controller('OneProjectCtrl', function($rootScope, $scope, $location) {
+
+        $scope.showEditForm = function(project){
+            $scope.$emit('projectChange', {
+                project : project,
+                type: 'edit'
+            });
+        };
+
+        $scope.deleteProject = function(project){
+            $scope.$storage.restLab.projects = _.without($scope.$storage.restLab.projects, project); //created is used as a unique key
+        };
+
+    })
+
+
+    .controller('EditProjectCtrl', function($rootScope, $scope, $location) {
+        console.log('inited EditProjectCtrl controller');
+        console.log('scoped project is currently', $scope.project);
+        /* Init values */
         $scope.projectFormMode = 'new';
         var defaultProject = {
             url : {
                 port:80,
                 protocol: 'http://'
-            }
+            },
+            endpoints: [],
+            tests: []
         };
-
         $scope.newProject = defaultProject;
-        $scope.addFormVisible = $scope.$storage.restLab.projects.length === 0; //default to show when there are no projects
 
-        $scope.showAddForm = function(show){
-            $scope.addFormVisible = show;
-            $scope.projectFormMode = 'new';
+        $scope.$on('projectEdit', function(event, message){
+            console.log('detected project edit',message);
+            console.log('comparing', message.project.key ,  $scope.project.key);
 
+            if (message.project.key == $scope.project.key){ //only open the active project edit page
+                $scope.addFormVisible = true;
+                $scope.projectFormMode = 'edit';
 
-            $scope.newProject = defaultProject; //clear
-            $scope.addProjectForm.$setPristine();
-        };
+                $scope.newProject = _.clone(message.project, true); //clear
+                $scope.addProjectForm.$setPristine();
+            }else{
+                $scope.addFormVisible = false; //close others
+            }
 
-        $scope.showEditForm = function(project){
-            $scope.addFormVisible = true;
-            $scope.projectFormMode = 'edit';
+        });
+        /* Listen to parents */
+        $scope.$on('projectAdd', function(event, message){
+            console.log('detected project add',message);
+            if (_.isUndefined($scope.project)){
+                $scope.addFormVisible = true;
+                $scope.projectFormMode = 'add';
+                $scope.newProject = defaultProject;
+                $scope.addProjectForm.$setPristine();
+            }
+        });
 
-
-            $scope.newProject = _.clone(project, true); //clear
-            $scope.addProjectForm.$setPristine();
-        };
-
+        /* watch form variables */
         $scope.$watch('newProject.name', function(name){
 
             if (name){
@@ -71,85 +181,41 @@ angular.module('app.projects', ['app.projects.endpoints'])
 
         });
 
-        var projectDefaults = {
-            endpoints: [],
-            tests: []
-        };
 
-        $scope.addProject = function(project){
-            if ($scope.projectFormMode == 'edit'){
-                project.updated = moment();
-                var oldProject = _.find($scope.$storage.restLab.projects, {created:project.created}); //created is used as a unique key
-
-                oldProject = _.merge(oldProject, project);
-
-            }else{
-                project.created = moment();
-                project.statsGraph = getProjectBarGraph(project);
-                project = _.merge(project, projectDefaults);
-                $scope.$storage.restLab.projects.push(project);
-            }
-
+        var resetForm = function(){
             $scope.newProject = defaultProject;
             $scope.addProjectForm.$setPristine();
             $scope.addFormVisible = false;
         };
 
-        $scope.deleteProject = function(project){
-            $scope.$storage.restLab.projects = _.without($scope.$storage.restLab.projects, project); //created is used as a unique key
+        $scope.addNewProject = function(project){
+            project.created = moment();
+//            project.statsGraph = getProjectBarGraph(project);
+            project = _.merge(project, defaultProject);
+            $scope.$storage.restLab.projects.push(project);
         };
 
-        var calculateRounding = function(list, target) {
-            var off = target - _.reduce(list, function(acc, x) { return acc + Math.round(x); }, 0);
-            return _.chain(list).
-                sortBy(function(x) { return Math.round(x) - x; }).
-                map(function(x, i) { return Math.round(x) + (off > i) - (i >= (list.length + off)); }).
-                value();
+        $scope.updateProject = function(project){
+            project.updated = moment();
+            var oldProject = _.find($scope.$storage.restLab.projects, {created:project.created}); //created is used as a unique key
+
+            oldProject = _.merge(oldProject, project);
         };
 
-        var getProjectBarGraph = function(project){
-            var testStats =  {
-                passed : _.random(0,30),
-                failed : _.random(0,30),
-                untested: _.random(0,30)
-            }; //@todo tmp
-            var totalTests = testStats.passed + testStats.failed + testStats.untested;
-
-            console.log('project bar graph called : passed:'+testStats.passed +', failed:' + testStats.failed +', failed:'+ testStats.untested+', total:'+totalTests);
-
-            var roundingCalc = calculateRounding(
-                [
-                    Math.round(testStats.passed/totalTests * 100),
-                    Math.round(testStats.failed/totalTests * 100),
-                    Math.round(testStats.untested/totalTests * 100)
-                ],
-            100);
-
-            return [
-                {
-                    name: 'Passed',
-                    value: roundingCalc[0],
-                    type: 'success'
-                },
-                {
-                    name: 'Failed',
-                    value: roundingCalc[1],
-                    type: 'danger'
-                },
-                {
-                    name: 'Untested',
-                    value: roundingCalc[2],
-                    type: 'info'
-                }
-            ];
+        $scope.closeForm = function(){
+            $scope.addFormVisible = false;
+            $scope.$emit('projectAddFormClosed');
         };
 
 
-
-        _.forEach($scope.$storage.restLab.projects, function(project){
-            project.statsGraph = getProjectBarGraph(project); //called every time as this will likely be updated frequently
-        });
-
+        $scope.buttonToggle = 'foo';
+        $scope.toggleButton = function(){
+            if ($scope.buttonToggle == 'foo'){
+                $scope.buttonToggle = 'bar';
+            }else{
+                $scope.buttonToggle = 'foo';
+            }
+        };
     })
 
 ;

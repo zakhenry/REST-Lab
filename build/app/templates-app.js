@@ -1,4 +1,4 @@
-angular.module('templates-app', ['_layouts/default.tpl.html', '_partials/navigation.tpl.html', 'home/home.tpl.html', 'projects/endpoints/endpoints.tpl.html', 'projects/projects.tpl.html']);
+angular.module('templates-app', ['_layouts/default.tpl.html', '_partials/navigation.tpl.html', 'home/home.tpl.html', 'projects/edit-project.tpl.html', 'projects/endpoints/endpoints.tpl.html', 'projects/project.tpl.html', 'projects/projects.tpl.html']);
 
 angular.module("_layouts/default.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("_layouts/default.tpl.html",
@@ -29,6 +29,60 @@ angular.module("home/home.tpl.html", []).run(["$templateCache", function($templa
     "\n" +
     "\n" +
     "\n" +
+    "</div>");
+}]);
+
+angular.module("projects/edit-project.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("projects/edit-project.tpl.html",
+    "<div class=\"alert alert-info alert-dismissable\" ng-show=\"addFormVisible\">\n" +
+    "    <button type=\"button\" class=\"close\" aria-hidden=\"true\" ng-click=\"showAddForm(false)\">&times;</button>\n" +
+    "    <h2>{{projectFormMode == 'add' ? 'Add new' : 'Edit existing'}} project</h2>\n" +
+    "    <ng-form name=\"addProjectForm\" role=\"form\" class=\"form-horizontal\">\n" +
+    "\n" +
+    "        <div class=\"form-group\" ng-class=\"{'has-error':addProjectForm.projectName.$dirty && addProjectForm.projectName.$invalid}\">\n" +
+    "            <label for=\"projectName\" class=\"col-sm-2 control-label\">Project Name</label>\n" +
+    "            <div class=\"col-sm-8\">\n" +
+    "                <input type=\"text\" ng-model=\"newProject.name\" class=\"form-control\" id=\"projectName\" name=\"projectName\" placeholder=\"Enter project name\" required>\n" +
+    "            </div>\n" +
+    "            <span class=\"help-block\" ng-show=\"addProjectForm.projectName.$invalid && addProjectForm.projectName.$dirty\">* Required</span>\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <div class=\"form-group\" ng-class=\"{'has-error':addProjectForm.projectKey.$dirty && addProjectForm.projectKey.$invalid}\">\n" +
+    "            <label for=\"projectKey\" class=\"col-sm-2 control-label\">Project Key</label>\n" +
+    "            <div class=\"col-sm-8\">\n" +
+    "                <input disabled type=\"text\" ng-model=\"newProject.key\" class=\"form-control\" id=\"projectKey\" name=\"projectKey\" placeholder=\"Project key is determined by project name\">\n" +
+    "            </div>\n" +
+    "            <span class=\"help-block\" ng-show=\"addProjectForm.projectKey.$error.keyExists\">Project key already exists</span>\n" +
+    "            <span class=\"help-block\" ng-show=\"addProjectForm.projectKey.$error.keyLength\">Project key invalid</span>\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <div class=\"form-group\" ng-class=\"{'has-error':addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$invalid}\">\n" +
+    "            <label for=\"projectBaseUrl\" class=\"col-sm-2 control-label\">Project Base URL</label>\n" +
+    "            <div class=\"col-sm-6\">\n" +
+    "                <div class=\"input-group\">\n" +
+    "                    <div class=\"input-group-btn\">\n" +
+    "                        <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span> {{newProject.url.protocol || 'Protocol'}}</button>\n" +
+    "                        <ul class=\"dropdown-menu\">\n" +
+    "                            <li><a ng-click=\"newProject.url.protocol = 'http://'\">http://</a></li>\n" +
+    "                            <li><a ng-click=\"newProject.url.protocol = 'https://'\">https://</a></li>\n" +
+    "                        </ul>\n" +
+    "                    </div><!-- /btn-group -->\n" +
+    "                    <input type=\"text\" ng-model=\"newProject.url.host\" class=\"form-control\" id=\"projectBaseUrl\" name=\"projectBaseUrl\" placeholder=\"Base URL of the project\" required>\n" +
+    "                </div><!-- /input-group -->\n" +
+    "            </div>\n" +
+    "            <div class=\"col-sm-2\">\n" +
+    "                <label for=\"projectBaseUrlPort\" class=\"control-label\">Port</label>\n" +
+    "                <input type=\"text\" ng-model=\"newProject.url.port\" class=\"form-control\" id=\"projectBaseUrlPort\" name=\"projectBaseUrlPort\" placeholder=\"Enter port number\" required>\n" +
+    "            </div>\n" +
+    "            <span class=\"help-block\" ng-show=\"addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.required\">* Required</span>\n" +
+    "            <span class=\"help-block\" ng-show=\"addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.urlInvalid\">Invalid url</span>\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <button ng-if=\"projectFormMode == 'add'\" ng-disabled=\"!addProjectForm.$dirty || addProjectForm.$invalid\" class=\"btn btn-primary\" ng-click=\"addNewProject(newProject)\">Add project</button>\n" +
+    "        <button ng-if=\"projectFormMode == 'edit'\" ng-disabled=\"!addProjectForm.$dirty || addProjectForm.$invalid\" class=\"btn btn-primary\" ng-click=\"updateProject(newProject)\">Update</button>\n" +
+    "        <button class=\"btn\" ng-click=\"closeForm()\">Cancel</button>\n" +
+    "\n" +
+    "    </ng-form>\n" +
     "</div>");
 }]);
 
@@ -117,73 +171,20 @@ angular.module("projects/endpoints/endpoints.tpl.html", []).run(["$templateCache
     "</div>");
 }]);
 
-angular.module("projects/projects.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("projects/projects.tpl.html",
-    "<div class=\"container\">\n" +
+angular.module("projects/project.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("projects/project.tpl.html",
     "\n" +
-    "    <h1>Projects <small>Each distinct project you are testing</small></h1>\n" +
     "\n" +
-    "    <button ng-if=\"!addFormVisible\" class=\"btn btn-primary\" ng-click=\"showAddForm(true)\">Add Project</button>\n" +
     "\n" +
-    "    <div class=\"alert alert-info alert-dismissable\" ng-show=\"addFormVisible\">\n" +
-    "        <button type=\"button\" class=\"close\" aria-hidden=\"true\" ng-click=\"showAddForm(false)\">&times;</button>\n" +
-    "        <h2>{{projectFormMode == 'new' ? 'Add new' : 'Edit existing'}} project</h2>\n" +
-    "        <ng-form name=\"addProjectForm\" role=\"form\" class=\"form-horizontal\">\n" +
-    "\n" +
-    "            <div class=\"form-group\" ng-class=\"{'has-error':addProjectForm.projectName.$dirty && addProjectForm.projectName.$invalid}\">\n" +
-    "                <label for=\"projectName\" class=\"col-sm-2 control-label\">Project Name</label>\n" +
-    "                <div class=\"col-sm-8\">\n" +
-    "                    <input type=\"text\" ng-model=\"newProject.name\" class=\"form-control\" id=\"projectName\" name=\"projectName\" placeholder=\"Enter project name\" required>\n" +
-    "                </div>\n" +
-    "                <span class=\"help-block\" ng-show=\"addProjectForm.projectName.$invalid && addProjectForm.projectName.$dirty\">* Required</span>\n" +
-    "            </div>\n" +
-    "\n" +
-    "            <div class=\"form-group\" ng-class=\"{'has-error':addProjectForm.projectKey.$dirty && addProjectForm.projectKey.$invalid}\">\n" +
-    "                <label for=\"projectKey\" class=\"col-sm-2 control-label\">Project Key</label>\n" +
-    "                <div class=\"col-sm-8\">\n" +
-    "                    <input disabled type=\"text\" ng-model=\"newProject.key\" class=\"form-control\" id=\"projectKey\" name=\"projectKey\" placeholder=\"Project key is determined by project name\">\n" +
-    "                </div>\n" +
-    "                <span class=\"help-block\" ng-show=\"addProjectForm.projectKey.$error.keyExists\">Project key already exists</span>\n" +
-    "                <span class=\"help-block\" ng-show=\"addProjectForm.projectKey.$error.keyLength\">Project key invalid</span>\n" +
-    "            </div>\n" +
-    "\n" +
-    "            <div class=\"form-group\" ng-class=\"{'has-error':addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$invalid}\">\n" +
-    "                <label for=\"projectBaseUrl\" class=\"col-sm-2 control-label\">Project Base URL</label>\n" +
-    "                <div class=\"col-sm-6\">\n" +
-    "                    <div class=\"input-group\">\n" +
-    "                        <div class=\"input-group-btn\">\n" +
-    "                            <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span> {{newProject.url.protocol || 'Protocol'}}</button>\n" +
-    "                            <ul class=\"dropdown-menu\">\n" +
-    "                                <li><a ng-click=\"newProject.url.protocol = 'http://'\">http://</a></li>\n" +
-    "                                <li><a ng-click=\"newProject.url.protocol = 'https://'\">https://</a></li>\n" +
-    "                            </ul>\n" +
-    "                        </div><!-- /btn-group -->\n" +
-    "                        <input type=\"text\" ng-model=\"newProject.url.host\" class=\"form-control\" id=\"projectBaseUrl\" name=\"projectBaseUrl\" placeholder=\"Base URL of the project\" required>\n" +
-    "                    </div><!-- /input-group -->\n" +
-    "                </div>\n" +
-    "                <div class=\"col-sm-2\">\n" +
-    "                    <label for=\"projectBaseUrlPort\" class=\"control-label\">Port</label>\n" +
-    "                    <input type=\"text\" ng-model=\"newProject.url.port\" class=\"form-control\" id=\"projectBaseUrlPort\" name=\"projectBaseUrlPort\" placeholder=\"Enter port number\" required>\n" +
-    "                </div>\n" +
-    "                <span class=\"help-block\" ng-show=\"addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.required\">* Required</span>\n" +
-    "                <span class=\"help-block\" ng-show=\"addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.urlInvalid\">Invalid url</span>\n" +
-    "            </div>\n" +
-    "\n" +
-    "            <button ng-disabled=\"!addProjectForm.$dirty || addProjectForm.$invalid\" class=\"btn btn-primary\" ng-click=\"addProject(newProject)\">Submit</button>\n" +
-    "            <button class=\"btn\" ng-click=\"showAddForm(false)\">Cancel</button>\n" +
-    "\n" +
-    "        </ng-form>\n" +
-    "    </div>\n" +
-    "\n" +
-    "    <div class=\"panel panel-default\" ng-repeat=\"project in $storage.restLab.projects\">\n" +
+    "    <div class=\"panel panel-default\">\n" +
     "        <div class=\"panel-body\">\n" +
-    "            <h3>{{project.name}} - {{project.url.protocol+project.url.host}}</h3>\n" +
+    "            <h3>{{project.name}} - {{project.url.protocol+project.url.host+':'+project.url.port}}</h3>\n" +
     "            <div class=\"row\">\n" +
     "                <span class=\"col-sm-2\"><h4>Test statistics</h4></span>\n" +
     "                <span class=\"col-sm-10\">\n" +
-    "                    <progress>\n" +
+    "                    <progress class=\"progress-striped\">\n" +
     "                        <bar ng-repeat=\"bar in project.statsGraph\" value=\"bar.value\" type=\"{{bar.type}}\">\n" +
-    "                            <span ng-hide=\"bar.value < 5\">{{bar.name}} {{bar.value}}%</span>\n" +
+    "                            <span ng-hide=\"bar.value < 5\">{{bar.name}} {{bar.value}}% </span>({{bar.count}})\n" +
     "                        </bar>\n" +
     "                    </progress>\n" +
     "                </span>\n" +
@@ -211,11 +212,25 @@ angular.module("projects/projects.tpl.html", []).run(["$templateCache", function
     "                    <button class=\"btn btn-danger\" ng-click=\"deleteProject(project)\">Yes I'm sure, delete this project</button>\n" +
     "                    <button class=\"btn btn-info\" ng-click=\"deleteWarning = false\">No!, Take me back to safety</button>\n" +
     "                </div>\n" +
+    "                <div ui-view=\"editProject\" ng-animate=\"'fade'\"></div>\n" +
     "            </div>\n" +
     "\n" +
     "        </div>\n" +
     "\n" +
     "    </div>\n" +
+    "");
+}]);
+
+angular.module("projects/projects.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("projects/projects.tpl.html",
+    "<div class=\"container\">\n" +
+    "\n" +
+    "    <h1>Projects <small>Each distinct project you are testing</small></h1>\n" +
+    "\n" +
+    "    <button ng-if=\"!addProjectMode\" class=\"btn btn-primary\" ng-click=\"showAddProjectForm()\">Add Project</button>\n" +
+    "    <div ui-view=\"editProject\" ng-animate=\"'fade'\"></div>\n" +
+    "\n" +
+    "    <div ng-repeat=\"project in $storage.restLab.projects\" ui-view=\"projectView\"></div>\n" +
     "\n" +
     "\n" +
     "\n" +

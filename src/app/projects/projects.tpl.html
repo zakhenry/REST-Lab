@@ -2,99 +2,10 @@
 
     <h1>Projects <small>Each distinct project you are testing</small></h1>
 
-    <button ng-if="!addFormVisible" class="btn btn-primary" ng-click="showAddForm(true)">Add Project</button>
+    <button ng-if="!addProjectMode" class="btn btn-primary" ng-click="showAddProjectForm()">Add Project</button>
+    <div ui-view="editProject" ng-animate="'fade'"></div>
 
-    <div class="alert alert-info alert-dismissable" ng-show="addFormVisible">
-        <button type="button" class="close" aria-hidden="true" ng-click="showAddForm(false)">&times;</button>
-        <h2>{{projectFormMode == 'new' ? 'Add new' : 'Edit existing'}} project</h2>
-        <ng-form name="addProjectForm" role="form" class="form-horizontal">
-
-            <div class="form-group" ng-class="{'has-error':addProjectForm.projectName.$dirty && addProjectForm.projectName.$invalid}">
-                <label for="projectName" class="col-sm-2 control-label">Project Name</label>
-                <div class="col-sm-8">
-                    <input type="text" ng-model="newProject.name" class="form-control" id="projectName" name="projectName" placeholder="Enter project name" required>
-                </div>
-                <span class="help-block" ng-show="addProjectForm.projectName.$invalid && addProjectForm.projectName.$dirty">* Required</span>
-            </div>
-
-            <div class="form-group" ng-class="{'has-error':addProjectForm.projectKey.$dirty && addProjectForm.projectKey.$invalid}">
-                <label for="projectKey" class="col-sm-2 control-label">Project Key</label>
-                <div class="col-sm-8">
-                    <input disabled type="text" ng-model="newProject.key" class="form-control" id="projectKey" name="projectKey" placeholder="Project key is determined by project name">
-                </div>
-                <span class="help-block" ng-show="addProjectForm.projectKey.$error.keyExists">Project key already exists</span>
-                <span class="help-block" ng-show="addProjectForm.projectKey.$error.keyLength">Project key invalid</span>
-            </div>
-
-            <div class="form-group" ng-class="{'has-error':addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$invalid}">
-                <label for="projectBaseUrl" class="col-sm-2 control-label">Project Base URL</label>
-                <div class="col-sm-6">
-                    <div class="input-group">
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span> {{newProject.url.protocol || 'Protocol'}}</button>
-                            <ul class="dropdown-menu">
-                                <li><a ng-click="newProject.url.protocol = 'http://'">http://</a></li>
-                                <li><a ng-click="newProject.url.protocol = 'https://'">https://</a></li>
-                            </ul>
-                        </div><!-- /btn-group -->
-                        <input type="text" ng-model="newProject.url.host" class="form-control" id="projectBaseUrl" name="projectBaseUrl" placeholder="Base URL of the project" required>
-                    </div><!-- /input-group -->
-                </div>
-                <div class="col-sm-2">
-                    <label for="projectBaseUrlPort" class="control-label">Port</label>
-                    <input type="text" ng-model="newProject.url.port" class="form-control" id="projectBaseUrlPort" name="projectBaseUrlPort" placeholder="Enter port number" required>
-                </div>
-                <span class="help-block" ng-show="addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.required">* Required</span>
-                <span class="help-block" ng-show="addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.urlInvalid">Invalid url</span>
-            </div>
-
-            <button ng-disabled="!addProjectForm.$dirty || addProjectForm.$invalid" class="btn btn-primary" ng-click="addProject(newProject)">Submit</button>
-            <button class="btn" ng-click="showAddForm(false)">Cancel</button>
-
-        </ng-form>
-    </div>
-
-    <div class="panel panel-default" ng-repeat="project in $storage.restLab.projects">
-        <div class="panel-body">
-            <h3>{{project.name}} - {{project.url.protocol+project.url.host}}</h3>
-            <div class="row">
-                <span class="col-sm-2"><h4>Test statistics</h4></span>
-                <span class="col-sm-10">
-                    <progress>
-                        <bar ng-repeat="bar in project.statsGraph" value="bar.value" type="{{bar.type}}">
-                            <span ng-hide="bar.value < 5">{{bar.name}} {{bar.value}}%</span>
-                        </bar>
-                    </progress>
-                </span>
-            </div>
-
-            <span class="row">
-                <span class="col-sm-8">
-                    <a class="btn btn-info" href="/projects/{{project.key}}/endpoints">Configure Endpoints</a>
-                    <a class="btn btn-primary disabled">Configure Tests</a>
-                    <a class="btn btn-success disabled">Run Tests</a>
-                </span>
-                <span class="col-sm-4">
-                    <span class="pull-right">
-                        <button class="btn btn-info" ng-click="showEditForm(project)">Edit Project</button>
-                        <button class="btn btn-danger" ng-show="!deleteWarning" ng-click="deleteWarning = true">Delete Project</button>
-                    </span>
-                </span>
-            </span>
-
-            <div class="row">
-                <div class="alert alert-danger col-sm-12" ng-show="deleteWarning">
-                    <button type="button" class="close" aria-hidden="true" ng-click="deleteWarning = false">&times;</button>
-                    <h4>Deleting project!</h4>
-                    <p>Caution, deleting a project is irreversable - you will lose all endpoints and test results. Are you really sure you want to do this?</p>
-                    <button class="btn btn-danger" ng-click="deleteProject(project)">Yes I'm sure, delete this project</button>
-                    <button class="btn btn-info" ng-click="deleteWarning = false">No!, Take me back to safety</button>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
+    <div ng-repeat="project in $storage.restLab.projects" ui-view="projectView"></div>
 
 
 

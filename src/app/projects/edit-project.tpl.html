@@ -1,0 +1,50 @@
+<div class="alert alert-info alert-dismissable" ng-show="addFormVisible">
+    <button type="button" class="close" aria-hidden="true" ng-click="showAddForm(false)">&times;</button>
+    <h2>{{projectFormMode == 'add' ? 'Add new' : 'Edit existing'}} project</h2>
+    <ng-form name="addProjectForm" role="form" class="form-horizontal">
+
+        <div class="form-group" ng-class="{'has-error':addProjectForm.projectName.$dirty && addProjectForm.projectName.$invalid}">
+            <label for="projectName" class="col-sm-2 control-label">Project Name</label>
+            <div class="col-sm-8">
+                <input type="text" ng-model="newProject.name" class="form-control" id="projectName" name="projectName" placeholder="Enter project name" required>
+            </div>
+            <span class="help-block" ng-show="addProjectForm.projectName.$invalid && addProjectForm.projectName.$dirty">* Required</span>
+        </div>
+
+        <div class="form-group" ng-class="{'has-error':addProjectForm.projectKey.$dirty && addProjectForm.projectKey.$invalid}">
+            <label for="projectKey" class="col-sm-2 control-label">Project Key</label>
+            <div class="col-sm-8">
+                <input disabled type="text" ng-model="newProject.key" class="form-control" id="projectKey" name="projectKey" placeholder="Project key is determined by project name">
+            </div>
+            <span class="help-block" ng-show="addProjectForm.projectKey.$error.keyExists">Project key already exists</span>
+            <span class="help-block" ng-show="addProjectForm.projectKey.$error.keyLength">Project key invalid</span>
+        </div>
+
+        <div class="form-group" ng-class="{'has-error':addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$invalid}">
+            <label for="projectBaseUrl" class="col-sm-2 control-label">Project Base URL</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span> {{newProject.url.protocol || 'Protocol'}}</button>
+                        <ul class="dropdown-menu">
+                            <li><a ng-click="newProject.url.protocol = 'http://'">http://</a></li>
+                            <li><a ng-click="newProject.url.protocol = 'https://'">https://</a></li>
+                        </ul>
+                    </div><!-- /btn-group -->
+                    <input type="text" ng-model="newProject.url.host" class="form-control" id="projectBaseUrl" name="projectBaseUrl" placeholder="Base URL of the project" required>
+                </div><!-- /input-group -->
+            </div>
+            <div class="col-sm-2">
+                <label for="projectBaseUrlPort" class="control-label">Port</label>
+                <input type="text" ng-model="newProject.url.port" class="form-control" id="projectBaseUrlPort" name="projectBaseUrlPort" placeholder="Enter port number" required>
+            </div>
+            <span class="help-block" ng-show="addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.required">* Required</span>
+            <span class="help-block" ng-show="addProjectForm.projectBaseUrl.$dirty && addProjectForm.projectBaseUrl.$error.urlInvalid">Invalid url</span>
+        </div>
+
+        <button ng-if="projectFormMode == 'add'" ng-disabled="!addProjectForm.$dirty || addProjectForm.$invalid" class="btn btn-primary" ng-click="addNewProject(newProject)">Add project</button>
+        <button ng-if="projectFormMode == 'edit'" ng-disabled="!addProjectForm.$dirty || addProjectForm.$invalid" class="btn btn-primary" ng-click="updateProject(newProject)">Update</button>
+        <button class="btn" ng-click="closeForm()">Cancel</button>
+
+    </ng-form>
+</div>
