@@ -99,6 +99,14 @@ angular.module('app.projects', ['app.projects.endpoints'])
             $scope.$storage.restLab.projects = _.without($scope.$storage.restLab.projects, project); //created is used as a unique key
         };
 
+        var calculateRounding = function(list, target) {
+            var off = target - _.reduce(list, function(acc, x) { return acc + Math.round(x); }, 0);
+            return _.chain(list).
+                sortBy(function(x) { return Math.round(x) - x; }).
+                map(function(x, i) { return Math.round(x) + (off > i) - (i >= (list.length + off)); }).
+                value();
+        };
+
         var getProjectBarGraph = function(project){
             var testStats =  {
                 passed : _.random(0,30),
@@ -107,22 +115,30 @@ angular.module('app.projects', ['app.projects.endpoints'])
             }; //@todo tmp
             var totalTests = testStats.passed + testStats.failed + testStats.untested;
 
-            console.log('project bar graph called');
+            console.log('project bar graph called : passed:'+testStats.passed +', failed:' + testStats.failed +', failed:'+ testStats.untested+', total:'+totalTests);
+
+            var roundingCalc = calculateRounding(
+                [
+                    Math.round(testStats.passed/totalTests * 100),
+                    Math.round(testStats.failed/totalTests * 100),
+                    Math.round(testStats.untested/totalTests * 100)
+                ],
+            100);
 
             return [
                 {
                     name: 'Passed',
-                    value: Math.round(testStats.passed/totalTests * 100),
+                    value: roundingCalc[0],
                     type: 'success'
                 },
                 {
                     name: 'Failed',
-                    value: Math.round(testStats.failed/totalTests * 100),
+                    value: roundingCalc[1],
                     type: 'danger'
                 },
                 {
                     name: 'Untested',
-                    value: Math.round(testStats.untested/totalTests * 100),
+                    value: roundingCalc[2],
                     type: 'info'
                 }
             ];
