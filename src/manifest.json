@@ -7,9 +7,9 @@
     // Recommended
     "description": "Endpoint Testing for REST APIs",
     "icons": {
-        "16": "/assets/icon16.png",
-        "48": "/assets/icon48.png",
-        "128": "/assets/icon128.png"
+        "16": "/assets/restlab-16.png",
+        "48": "/assets/restlab-48.png",
+        "128": "/assets/restlab-128.png"
     },
 
     "app":{
