@@ -51,6 +51,13 @@ angular.module('app.projects.endpoints', [])
 
     .controller('EndpointViewCtrl', function($rootScope, $scope, apiInterface) {
 
+        $scope.showEditForm = function(endpoint){
+            $scope.$emit('endpointChange', {
+                endpoint : project,
+                type: 'edit'
+            });
+        };
+
         $scope.deleteEndpoint = function(endpoint){
             project.endpoints = _.without(project.endpoints, endpoint); //created is used as a unique key
         };
