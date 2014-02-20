@@ -203,15 +203,6 @@ angular.module('app.projects', ['app.projects.endpoints'])
             });
         };
 
-
-        $scope.buttonToggle = 'foo';
-        $scope.toggleButton = function(){
-            if ($scope.buttonToggle == 'foo'){
-                $scope.buttonToggle = 'bar';
-            }else{
-                $scope.buttonToggle = 'foo';
-            }
-        };
     })
 
 ;

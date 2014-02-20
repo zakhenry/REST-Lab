@@ -1,0 +1,43 @@
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3 class="endpoint-title">
+            <span ng-repeat="element in endpoint.uri.breakdown">
+                <code class="variable" ng-if="element.type == 'variable'">[{{element.val}}]</code>
+                <span class="segment" ng-if="element.type == 'segment'">{{element.val}}</span>
+            </span>
+        </h3>
+
+        <span class="row">
+            <h4>Methods</h4>
+            <button class="btn btn-default" ng-repeat="(method,enabled) in endpoint.methods track by method" ng-show="enabled == true">{{method}}</button>
+        </span>
+
+        <span class="row">
+            <span class="col-sm-8">
+                <a class="btn btn-primary disabled">Configure Tests</a>
+                <a class="btn btn-success disabled">Run Tests</a>
+            </span>
+            <span class="col-sm-4">
+                <span class="pull-right">
+                    <button class="btn btn-info" ng-click="showEditForm(endpoint)">Edit Endpoint</button>
+                    <button class="btn btn-danger" ng-show="!deleteWarning" ng-click="deleteWarning = true">Delete Endpoint</button>
+                </span>
+            </span>
+        </span>
+
+        <div class="row">
+            <div class="alert alert-danger col-sm-12" ng-show="deleteWarning">
+                <button type="button" class="close" aria-hidden="true" ng-click="deleteWarning = false">&times;</button>
+                <h4>Deleting endpoint!</h4>
+                <p>Caution, deleting an endpoint is irreversable - you will lose all related settings and test results. Are you really sure you want to do this?</p>
+                <button class="btn btn-danger" ng-click="deleteEndpoint(endpoint)">Yes I'm sure, delete this endpoint</button>
+                <button class="btn btn-info" ng-click="deleteWarning = false">No!, Take me back to safety</button>
+            </div>
+            <div ui-view="endpointForm" ></div>
+        </div>
+
+    </div>
+
+</div>
+
