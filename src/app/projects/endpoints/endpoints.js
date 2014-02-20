@@ -7,19 +7,86 @@ angular.module('app.projects.endpoints', [])
             url: '/:projectKey/endpoints',
             views: {
                 "main@defaultLayout": { // Points to the ui-view="main" in modal-layout.tpl.html
-                    controller: 'EndpointsCtrl as EndpointsCtrl',
+                    controller: 'EndpointsListCtrl as EndpointsListCtrl',
                     templateUrl: 'projects/endpoints/endpoints.tpl.html'
+                },
+                "endpointView@defaultLayout.projects.endpoints": {
+                    controller: 'EndpointViewCtrl as EndpointViewCtrl',
+                    templateUrl: 'projects/endpoints/endpoint-view.tpl.html'
+                },
+                "endpointForm@defaultLayout.projects.endpoints": {
+                    controller: 'EndpointFormCtrl as EndpointFormCtrl',
+                    templateUrl: 'projects/endpoints/endpoint-form.tpl.html'
                 }
             }
 
         });
     })
 
-    .controller('EndpointsCtrl', function($rootScope, $scope, $stateParams, apiInterface) {
-
-
+    .controller('EndpointsListCtrl', function($rootScope, $scope, $stateParams) {
         var project = _.find($scope.$storage.restLab.projects, {key:$stateParams.projectKey});
         $scope.project = project;
+
+        $scope.endpointFormVisible = project.endpoints.length === 0; //default to show when there are no endpoints
+        $scope.endpointFormMode = 'add';
+
+
+        $scope.$on('endpointChange', function(event, message){
+            console.log('detected endpoint change',event,message);
+
+            $scope.$broadcast('endpointEdit', message); //fwd message to the children
+
+
+        });
+
+        $scope.$on('endpointFormClosed', function(event, message){
+            if (message.type === 'add'){
+                $scope.endpointFormVisible = false;
+            }
+        });
+
+        $scope.$on('saveEndpoint', function(event, endpoint){ //rather than emit this should be a service
+
+            var existing = _.find(project.endpoints, {created:endpoint.created});
+
+            var exists = _.isObject(existing);
+            if (exists){
+                existing = _.merge(existing, endpoint);
+            }else{
+                project.endpoints.push(endpoint);
+            }
+        });
+
+        $scope.showAddEndpointForm = function(){
+            $scope.endpointFormVisible = true;
+            $scope.$broadcast('endpointAdd'); //fwd message to the children
+        };
+
+    })
+
+    .controller('EndpointViewCtrl', function($scope) {
+
+        var project = $scope.project;
+
+        $scope.showEditForm = function(endpoint){
+            $scope.$emit('endpointChange', {
+                endpoint : endpoint,
+                type: 'edit'
+            });
+        };
+
+
+
+        $scope.deleteEndpoint = function(endpoint){
+            project.endpoints = _.without(project.endpoints, endpoint); //created is used as a unique key
+        };
+
+    })
+
+    .controller('EndpointFormCtrl', function($rootScope, $scope, apiInterface) {
+console.log('endpoit edit ctrl called');
+
+        var project = $scope.project;
 
         var emptyEndpoint = {
             uri: {
@@ -38,30 +105,32 @@ angular.module('app.projects.endpoints', [])
             }
         };
 
-        $scope.endpointFormMode = 'new';
         $scope.newEndpoint = emptyEndpoint;
 
 
+        $scope.$on('endpointEdit', function(event, message){
 
-        $scope.projectFormVisible = project.endpoints.length === 0; //default to show when there are no endpoints
+            if (!!$scope.endpoint && message.endpoint.uri.key == $scope.endpoint.uri.key){ //only open the active project edit page
+                $scope.endpointFormVisible = true;
+                $scope.endpointFormMode = 'edit';
 
-        $scope.showAddForm = function(show){
-            $scope.projectFormVisible = show;
-            $scope.endpointFormMode = 'new';
+                $scope.newEndpoint = _.clone(message.endpoint, true); //clear
+                $scope.endpointForm.$setPristine();
+            }else{
+                $scope.endpointFormVisible = false; //close others
+            }
 
+        });
 
-            $scope.newEndpoint = emptyEndpoint; //clear
-            $scope.addEndpointForm.$setPristine();
-        };
-
-        $scope.showEditForm = function(endpoint){
-            $scope.projectFormVisible = true;
-            $scope.endpointFormMode = 'edit';
-
-
-            $scope.newEndpoint = _.clone(endpoint, true); //clear
-            $scope.addEndpointForm.$setPristine();
-        };
+        $scope.$on('endpointAdd', function(event, message){
+            console.log('detected endpoint add',message);
+            if (_.isUndefined($scope.endpoint)){
+                $scope.endpointFormVisible = true;
+                $scope.endpointFormMode = 'add';
+                $scope.newEndpoint = emptyEndpoint;
+                $scope.endpointForm.$setPristine();
+            }
+        });
 
         $scope.$watch('newEndpoint.uri.definition', function(name){
             var existing = false;
@@ -96,32 +165,37 @@ angular.module('app.projects.endpoints', [])
                 $scope.newEndpoint.uri.breakdown = uriObject;
 
             }
-            $scope.addEndpointForm.endpointUri.$setValidity('uriExists', !existing);
-            $scope.addEndpointForm.endpointUri.$setValidity('uriValid', !!$scope.newEndpoint.uri.breakdown);
+            $scope.endpointForm.endpointUri.$setValidity('uriExists', !existing);
+            $scope.endpointForm.endpointUri.$setValidity('uriValid', !!$scope.newEndpoint.uri.breakdown);
 
 
         });
 
-        $scope.addEndpoint = function(endpoint){
-            if ($scope.endpointFormMode == 'edit'){
-                endpoint.updated = moment();
-                var oldEndpoint = _.find(project.endpoints, {created:endpoint.created}); //created is used as a unique key
-
-                oldEndpoint = _.merge(oldEndpoint, endpoint);
-
-            }else{
-                endpoint.created = moment();
-                project.endpoints.push(endpoint);
-            }
-
+        var resetForm = function(){
             $scope.newEndpoint = emptyEndpoint;
-            $scope.addEndpointForm.$setPristine();
+            $scope.endpointForm.$setPristine();
             $scope.projectFormVisible = false;
         };
 
-        $scope.deleteEndpoint = function(endpoint){
-            project.endpoints = _.without(project.endpoints, endpoint); //created is used as a unique key
+        $scope.addNewEndpoint = function(endpoint){
+            endpoint.created = moment();
+//            project.endpoints.push(endpoint);
+            $scope.$emit('saveEndpoint', endpoint);
+            $scope.closeForm();
         };
+
+        $scope.updateEndpoint = function(endpoint){
+            endpoint.updated = moment();
+//            var oldEndpoint = _.find(project.endpoints, {created:endpoint.created}); //created is used as a unique key
+
+//            oldEndpoint = _.merge(oldEndpoint, endpoint);
+
+
+            $scope.$emit('saveEndpoint', endpoint);
+
+            $scope.closeForm();
+        };
+
 
         $scope.autodetectMethods = function(project, endpoint){
 
@@ -135,8 +209,16 @@ angular.module('app.projects.endpoints', [])
                 });
             });
 
-            $scope.addEndpointForm.endpointMethod.$setViewValue($scope.addEndpointForm.endpointMethod.$viewValue); //dirty hack to setdirty
+            $scope.endpointForm.endpointMethod.$setViewValue($scope.endpointForm.endpointMethod.$viewValue); //dirty hack to setdirty
 
+        };
+
+        $scope.closeForm = function(){
+            resetForm();
+            $scope.$emit('endpointFormClosed', {
+                type: $scope.endpointFormMode
+            });
+            $scope.endpointFormVisible = false;
         };
 
 

@@ -2,80 +2,11 @@
 
     <h1>Endpoints <small>The url points that the api interface accesses</small></h1>
 
-    <button ng-if="!projectFormVisible" class="btn btn-primary" ng-click="showAddForm(true)">Add Endpoint</button>
+    <button ng-if="!endpointFormVisible" class="btn btn-primary" ng-click="showAddEndpointForm()">Add Endpoint</button>
 
-    <div class="alert alert-info alert-dismissable" ng-show="projectFormVisible">
-        <button type="button" class="close" aria-hidden="true" ng-click="showAddForm(false)">&times;</button>
-        <h2>{{endpointFormMode == 'new' ? 'Add new top level' : 'Edit existing'}} endpoint</h2>
-        <ng-form name="addEndpointForm" role="form" class="form-horizontal">
+    <div ui-view="endpointForm"></div>
 
-            <div class="form-group" ng-class="{'has-error':addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$invalid}">
-                <label for="endpointUri" class="col-sm-2 control-label">Endpoint URI</label>
-                <div class="col-sm-8">
-                    <div class="input-group">
-                        <span class="input-group-addon">{{project.url.protocol}}{{project.url.host}}:{{project.url.port}}</span>
-                        <input type="text" ng-model="newEndpoint.uri.definition" class="form-control" id="endpointUri" name="endpointUri" placeholder="/example" required>
-                    </div>
-                </div>
-                <span class="help-block" ng-show="addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$error.uriExists">Endpoint already exists</span>
-                <span class="help-block" ng-show="addEndpointForm.endpointUri.$dirty && addEndpointForm.endpointUri.$error.required">Endpoint too short</span>
-            </div>
-
-            <div class="form-group">
-                <label for="endpointUri" class="col-sm-2 control-label">Endpoint Methods</label>
-                <div class="col-sm-8">
-                    <button class="btn btn-info" ng-click="autodetectMethods(project, newEndpoint)">Autodetect <i class="fa fa-question-circle" tooltip="Auto fill the methods with an OPTIONS request to the endpoint defined above"></i> </button>
-                    <label class="checkbox-inline" ng-repeat="(method,enabled) in newEndpoint.methods track by method">
-                        <input type="checkbox" ng-model="newEndpoint.methods[method]" name="endpointMethod"> {{method}}
-                    </label>
-                </div>
-            </div>
-
-            <button ng-disabled="!addEndpointForm.$dirty || addEndpointForm.$invalid" class="btn btn-primary" ng-click="addEndpoint(newEndpoint)">Submit</button>
-            <button class="btn" ng-click="showAddForm(false)">Cancel</button>
-        </ng-form>
-    </div>
-
-    <div class="panel panel-default" ng-repeat="endpoint in project.endpoints">
-        <div class="panel-body">
-            <h3 class="endpoint-title">
-                <span ng-repeat="element in endpoint.uri.breakdown">
-                    <code class="variable" ng-if="element.type == 'variable'">[{{element.val}}]</code>
-                    <span class="segment" ng-if="element.type == 'segment'">{{element.val}}</span>
-                </span>
-            </h3>
-
-            <span class="row">
-                <h4>Methods</h4>
-                <button class="btn btn-default" ng-repeat="(method,enabled) in endpoint.methods track by method" ng-show="enabled == true">{{method}}</button>
-            </span>
-
-            <span class="row">
-                <span class="col-sm-8">
-                    <a class="btn btn-primary disabled">Configure Tests</a>
-                    <a class="btn btn-success disabled">Run Tests</a>
-                </span>
-                <span class="col-sm-4">
-                    <span class="pull-right">
-                        <button class="btn btn-info" ng-click="showEditForm(endpoint)">Edit Endpoint</button>
-                        <button class="btn btn-danger" ng-show="!deleteWarning" ng-click="deleteWarning = true">Delete Endpoint</button>
-                    </span>
-                </span>
-            </span>
-
-            <div class="row">
-                <div class="alert alert-danger col-sm-12" ng-show="deleteWarning">
-                    <button type="button" class="close" aria-hidden="true" ng-click="deleteWarning = false">&times;</button>
-                    <h4>Deleting endpoint!</h4>
-                    <p>Caution, deleting an endpoint is irreversable - you will lose all related settings and test results. Are you really sure you want to do this?</p>
-                    <button class="btn btn-danger" ng-click="deleteEndpoint(endpoint)">Yes I'm sure, delete this endpoint</button>
-                    <button class="btn btn-info" ng-click="deleteWarning = false">No!, Take me back to safety</button>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
+    <div ui-view="endpointView" ng-repeat="endpoint in project.endpoints"></div>
 
 
 </div>
