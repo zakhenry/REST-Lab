@@ -31,14 +31,29 @@ angular.module('app.projects.endpoints', [])
         $scope.endpointFormMode = 'add';
 
 
-        $scope.$on('endpointChange', function(event, project){
-            console.log('detected endpoint edit',project);
-            $scope.$broadcast('endpointEdit', project); //fwd message to the children
+        $scope.$on('endpointChange', function(event, message){
+            console.log('detected endpoint change',event,message);
+
+            $scope.$broadcast('endpointEdit', message); //fwd message to the children
+
+
         });
 
         $scope.$on('endpointFormClosed', function(event, message){
             if (message.type === 'add'){
                 $scope.endpointFormVisible = false;
+            }
+        });
+
+        $scope.$on('saveEndpoint', function(event, endpoint){ //rather than emit this should be a service
+
+            var existing = _.find(project.endpoints, {created:endpoint.created});
+
+            var exists = _.isObject(existing);
+            if (exists){
+                existing = _.merge(existing, endpoint);
+            }else{
+                project.endpoints.push(endpoint);
             }
         });
 
@@ -59,6 +74,8 @@ angular.module('app.projects.endpoints', [])
                 type: 'edit'
             });
         };
+
+
 
         $scope.deleteEndpoint = function(endpoint){
             project.endpoints = _.without(project.endpoints, endpoint); //created is used as a unique key
@@ -162,17 +179,19 @@ console.log('endpoit edit ctrl called');
 
         $scope.addNewEndpoint = function(endpoint){
             endpoint.created = moment();
-            project.endpoints.push(endpoint);
-
+//            project.endpoints.push(endpoint);
+            $scope.$emit('saveEndpoint', endpoint);
             $scope.closeForm();
         };
 
         $scope.updateEndpoint = function(endpoint){
             endpoint.updated = moment();
-            var oldEndpoint = _.find(project.endpoints, {created:endpoint.created}); //created is used as a unique key
+//            var oldEndpoint = _.find(project.endpoints, {created:endpoint.created}); //created is used as a unique key
 
-            oldEndpoint = _.merge(oldEndpoint, endpoint);
+//            oldEndpoint = _.merge(oldEndpoint, endpoint);
 
+
+            $scope.$emit('saveEndpoint', endpoint);
 
             $scope.closeForm();
         };
