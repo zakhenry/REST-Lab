@@ -43,10 +43,10 @@ angular.module('app.projects.endpoints', [])
 
 
 
-        $scope.addFormVisible = project.endpoints.length === 0; //default to show when there are no endpoints
+        $scope.projectFormVisible = project.endpoints.length === 0; //default to show when there are no endpoints
 
         $scope.showAddForm = function(show){
-            $scope.addFormVisible = show;
+            $scope.projectFormVisible = show;
             $scope.endpointFormMode = 'new';
 
 
@@ -55,7 +55,7 @@ angular.module('app.projects.endpoints', [])
         };
 
         $scope.showEditForm = function(endpoint){
-            $scope.addFormVisible = true;
+            $scope.projectFormVisible = true;
             $scope.endpointFormMode = 'edit';
 
 
@@ -116,7 +116,7 @@ angular.module('app.projects.endpoints', [])
 
             $scope.newEndpoint = emptyEndpoint;
             $scope.addEndpointForm.$setPristine();
-            $scope.addFormVisible = false;
+            $scope.projectFormVisible = false;
         };
 
         $scope.deleteEndpoint = function(endpoint){

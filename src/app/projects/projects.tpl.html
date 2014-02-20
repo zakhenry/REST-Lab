@@ -2,11 +2,9 @@
 
     <h1>Projects <small>Each distinct project you are testing</small></h1>
 
-    <button ng-if="!addProjectMode" class="btn btn-primary" ng-click="showAddProjectForm()">Add Project</button>
-    <div ui-view="editProject" ng-animate="'fade'"></div>
+    <button ng-if="!projectFormMode" class="btn btn-primary" ng-click="showAddProjectForm()">Add Project</button>
+    <div ui-view="projectForm" ng-animate="'fade'"></div>
 
     <div ng-repeat="project in $storage.restLab.projects" ui-view="projectView"></div>
-
-
 
 </div>

@@ -2,9 +2,9 @@
 
     <h1>Endpoints <small>The url points that the api interface accesses</small></h1>
 
-    <button ng-if="!addFormVisible" class="btn btn-primary" ng-click="showAddForm(true)">Add Endpoint</button>
+    <button ng-if="!projectFormVisible" class="btn btn-primary" ng-click="showAddForm(true)">Add Endpoint</button>
 
-    <div class="alert alert-info alert-dismissable" ng-show="addFormVisible">
+    <div class="alert alert-info alert-dismissable" ng-show="projectFormVisible">
         <button type="button" class="close" aria-hidden="true" ng-click="showAddForm(false)">&times;</button>
         <h2>{{endpointFormMode == 'new' ? 'Add new top level' : 'Edit existing'}} endpoint</h2>
         <ng-form name="addEndpointForm" role="form" class="form-horizontal">

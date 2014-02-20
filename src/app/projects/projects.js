@@ -7,42 +7,40 @@ angular.module('app.projects', ['app.projects.endpoints'])
             url: '/projects',
             views: {
                 "main@defaultLayout": { // Points to the ui-view="main" in modal-layout.tpl.html
-                    controller: 'AllProjectsCtrl as AllProjectsCtrl',
+                    controller: 'ProjectListControl as ProjectListControl',
                     templateUrl: 'projects/projects.tpl.html'
                 },
                 "projectView@defaultLayout.projects": {
-                    controller: 'OneProjectCtrl as OneProjectCtrl',
-                    templateUrl: 'projects/project.tpl.html'
+                    controller: 'ProjectViewCtrl as ProjectViewCtrl',
+                    templateUrl: 'projects/project-view.tpl.html'
                 },
-                "editProject@defaultLayout.projects": {
-                    controller: 'EditProjectCtrl as EditProjectCtrl',
-                    templateUrl: 'projects/edit-project.tpl.html'
+                "projectForm@defaultLayout.projects": {
+                    controller: 'ProjectFormCtrl as ProjectFormCtrl',
+                    templateUrl: 'projects/project-form.tpl.html'
                 }
             }
 
         });
     })
 
-    .controller('AllProjectsCtrl', function($rootScope, $scope, $location) {
+    .controller('ProjectListControl', function($rootScope, $scope, $location) {
 
 
-        $scope.addProjectMode = $scope.$storage.restLab.projects.length === 0; //default to show when there are no projects
-//        $scope.addProjectMode = true;
+        $scope.projectFormMode = $scope.$storage.restLab.projects.length === 0; //default to show when there are no projects
 
         $scope.$on('projectChange', function(event, project){
             console.log('detected project edit',project);
             $scope.$broadcast('projectEdit', project); //fwd message to the children
         });
 
-        $scope.$on('projectAddFormClosed', function(){
-            if ($scope.projectFormMode == 'add'){
-                $scope.addProjectMode = false;
+        $scope.$on('projectFormClosed', function(event, message){
+            if (message.type === 'add'){
+                $scope.projectFormMode = false;
             }
-
         });
 
         $scope.showAddProjectForm = function(){
-            $scope.addProjectMode = true;
+            $scope.projectFormMode = true;
             $scope.$broadcast('projectAdd'); //fwd message to the children
         };
 
@@ -98,7 +96,7 @@ angular.module('app.projects', ['app.projects.endpoints'])
 
     })
 
-    .controller('OneProjectCtrl', function($rootScope, $scope, $location) {
+    .controller('ProjectViewCtrl', function($rootScope, $scope, $location) {
 
         $scope.showEditForm = function(project){
             $scope.$emit('projectChange', {
@@ -114,9 +112,7 @@ angular.module('app.projects', ['app.projects.endpoints'])
     })
 
 
-    .controller('EditProjectCtrl', function($rootScope, $scope, $location) {
-        console.log('inited EditProjectCtrl controller');
-        console.log('scoped project is currently', $scope.project);
+    .controller('ProjectFormCtrl', function($rootScope, $scope, $location) {
         /* Init values */
         $scope.projectFormMode = 'new';
         var defaultProject = {
@@ -130,17 +126,15 @@ angular.module('app.projects', ['app.projects.endpoints'])
         $scope.newProject = defaultProject;
 
         $scope.$on('projectEdit', function(event, message){
-            console.log('detected project edit',message);
-            console.log('comparing', message.project.key ,  $scope.project.key);
 
-            if (message.project.key == $scope.project.key){ //only open the active project edit page
-                $scope.addFormVisible = true;
+            if (!!$scope.project && message.project.key == $scope.project.key){ //only open the active project edit page
+                $scope.projectFormVisible = true;
                 $scope.projectFormMode = 'edit';
 
                 $scope.newProject = _.clone(message.project, true); //clear
                 $scope.addProjectForm.$setPristine();
             }else{
-                $scope.addFormVisible = false; //close others
+                $scope.projectFormVisible = false; //close others
             }
 
         });
@@ -148,7 +142,7 @@ angular.module('app.projects', ['app.projects.endpoints'])
         $scope.$on('projectAdd', function(event, message){
             console.log('detected project add',message);
             if (_.isUndefined($scope.project)){
-                $scope.addFormVisible = true;
+                $scope.projectFormVisible = true;
                 $scope.projectFormMode = 'add';
                 $scope.newProject = defaultProject;
                 $scope.addProjectForm.$setPristine();
@@ -185,7 +179,7 @@ angular.module('app.projects', ['app.projects.endpoints'])
         var resetForm = function(){
             $scope.newProject = defaultProject;
             $scope.addProjectForm.$setPristine();
-            $scope.addFormVisible = false;
+            $scope.projectFormVisible = false;
         };
 
         $scope.addNewProject = function(project){
@@ -203,8 +197,10 @@ angular.module('app.projects', ['app.projects.endpoints'])
         };
 
         $scope.closeForm = function(){
-            $scope.addFormVisible = false;
-            $scope.$emit('projectAddFormClosed');
+            resetForm();
+            $scope.$emit('projectFormClosed', {
+                type: $scope.projectFormMode
+            });
         };
 
 
