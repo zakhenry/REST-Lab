@@ -3,21 +3,29 @@
 angular.module('app.projects.endpoints', [])
 
     .config(function(stateHelperProvider) {
-        stateHelperProvider.addState('defaultLayout.projects.endpoints', {
-            url: '/:projectKey/endpoints',
+        stateHelperProvider.addState('defaultLayout.projects.project.endpoints', {
+            url: '/endpoints',
             views: {
                 "main@defaultLayout": { // Points to the ui-view="main" in modal-layout.tpl.html
                     controller: 'EndpointsListCtrl as EndpointsListCtrl',
                     templateUrl: 'projects/endpoints/endpoints.tpl.html'
                 },
-                "endpointView@defaultLayout.projects.endpoints": {
+                "endpointView@defaultLayout.projects.project.endpoints": {
                     controller: 'EndpointViewCtrl as EndpointViewCtrl',
                     templateUrl: 'projects/endpoints/endpoint-view.tpl.html'
                 },
-                "endpointForm@defaultLayout.projects.endpoints": {
+                "endpointForm@defaultLayout.projects.project.endpoints": {
                     controller: 'EndpointFormCtrl as EndpointFormCtrl',
                     templateUrl: 'projects/endpoints/endpoint-form.tpl.html'
                 }
+            },
+
+            data: {
+                breadcrumbs : [
+                    {key:'projects',type:'link'},
+                    {key:'projectKey',type:'var'},
+                    {key:'endpoints',type:'link'}
+                ]
             }
 
         });
@@ -84,7 +92,6 @@ angular.module('app.projects.endpoints', [])
     })
 
     .controller('EndpointFormCtrl', function($rootScope, $scope, apiInterface) {
-console.log('endpoit edit ctrl called');
 
         var project = $scope.project;
 

@@ -19,12 +19,7 @@ angular.module('stateManager', ['siteModules', 'stateHelper'])
                     },
                     'navigation@defaultLayout': { // Points to the ui-view="navigation" in default.tpl.html
                         templateUrl: '_partials/navigation.tpl.html',
-                        controller: [
-                            '$rootScope',
-                            function ($rootScope) {
-
-                            }
-                        ]
+                        controller: 'NavigationCtrl'
                     }
                 }
             })
@@ -34,5 +29,10 @@ angular.module('stateManager', ['siteModules', 'stateHelper'])
         angular.forEach(stateHelperProvider.getStates(), function(state) {
             $stateProvider.state(state.name, state.options);
         });
+    })
+
+    .controller('NavigationCtrl', function($scope, $state, $location) {
+
+
     })
 ;

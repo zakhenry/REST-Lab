@@ -1,0 +1,10 @@
+<div class="btn-group btn-breadcrumb">
+    <a href="/" class="btn btn-default"><i class="fa fa-home"></i></a>
+
+    <a  ng-repeat="breadcrumb in breadcrumbs"
+        href="{{breadcrumb.url}}"
+        ng-class="{'btn-primary':breadcrumb.link}"
+        ng-disabled="$last"
+        class="btn btn-default"
+    >{{breadcrumb.title}}</a>
+</div>

@@ -1,5 +1,6 @@
 angular.module('commonModules', [
     'titleService',
     'stateHelper',
-    'validation'
+    'validation',
+    'breadcrumbs'
 ]);

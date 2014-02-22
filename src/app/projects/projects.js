@@ -3,6 +3,13 @@
 angular.module('app.projects', ['app.projects.endpoints'])
 
     .config(function(stateHelperProvider) {
+
+        stateHelperProvider.addState('defaultLayout.projects.project', {
+            url: '/:projectKey',
+            abstract: true
+
+        });
+
         stateHelperProvider.addState('defaultLayout.projects', {
             url: '/projects',
             views: {
@@ -10,6 +17,7 @@ angular.module('app.projects', ['app.projects.endpoints'])
                     controller: 'ProjectListControl as ProjectListControl',
                     templateUrl: 'projects/projects.tpl.html'
                 },
+
                 "projectView@defaultLayout.projects": {
                     controller: 'ProjectViewCtrl as ProjectViewCtrl',
                     templateUrl: 'projects/project-view.tpl.html'
@@ -21,6 +29,9 @@ angular.module('app.projects', ['app.projects.endpoints'])
             }
 
         });
+
+
+
     })
 
     .controller('ProjectListControl', function($rootScope, $scope, $location) {
