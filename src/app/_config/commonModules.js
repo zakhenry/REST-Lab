@@ -2,5 +2,6 @@ angular.module('commonModules', [
     'titleService',
     'stateHelper',
     'validation',
-    'breadcrumbs'
+    'breadcrumbs',
+    'momentFilters'
 ]);

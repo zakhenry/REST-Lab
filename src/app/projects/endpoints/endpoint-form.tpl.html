@@ -1,5 +1,5 @@
 
-<div class="alert alert-info alert-dismissable" ng-show="endpointFormVisible">
+<div class="alert alert-info alert-dismissable" collapse="!endpointFormVisible">
     <button type="button" class="close" aria-hidden="true" ng-click="closeForm()">&times;</button>
     <h2>{{endpointFormMode == 'add' ? 'Add new top level' : 'Edit existing'}} endpoint</h2>
     <ng-form name="endpointForm" role="form" class="form-horizontal">

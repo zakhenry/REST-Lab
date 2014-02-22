@@ -18,14 +18,6 @@ angular.module('app.projects.endpoints', [])
                     controller: 'EndpointFormCtrl as EndpointFormCtrl',
                     templateUrl: 'projects/endpoints/endpoint-form.tpl.html'
                 }
-            },
-
-            data: {
-                breadcrumbs : [
-                    {key:'projects',type:'link'},
-                    {key:'projectKey',type:'var'},
-                    {key:'endpoints',type:'link'}
-                ]
             }
 
         });
@@ -38,6 +30,8 @@ angular.module('app.projects.endpoints', [])
         $scope.endpointFormVisible = project.endpoints.length === 0; //default to show when there are no endpoints
         $scope.endpointFormMode = 'add';
 
+        $scope.resultsPerPage = 10;
+        $scope.page = 1;
 
         $scope.$on('endpointChange', function(event, message){
             console.log('detected endpoint change',event,message);
@@ -70,6 +64,28 @@ angular.module('app.projects.endpoints', [])
             $scope.$broadcast('endpointAdd'); //fwd message to the children
         };
 
+/*        $scope.endpointFilterTerms = [
+            {
+                title: 'URI',
+                attr: 'uri.key'
+            },
+            {
+                title: 'Date Created',
+                attr: 'created'
+            },
+            {
+                title: 'Date Updated',
+                attr: 'updated'
+            }
+        ];*/
+
+    })
+
+    .filter('startFrom', function() { //filter for handling pagination
+        return function(input, start) {
+            start = +start; //parse to int
+            return input.slice(start);
+        };
     })
 
     .controller('EndpointViewCtrl', function($scope) {

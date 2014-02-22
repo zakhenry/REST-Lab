@@ -1,12 +1,19 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        <h3 class="endpoint-title">
-            <span ng-repeat="element in endpoint.uri.breakdown">
-                <code class="variable" ng-if="element.type == 'variable'">[{{element.val}}]</code>
-                <span class="segment" ng-if="element.type == 'segment'">{{element.val}}</span>
+        <span class="row">
+            <h3 class="endpoint-title col-sm-10">
+                <span ng-repeat="element in endpoint.uri.breakdown">
+                    <code class="variable" ng-if="element.type == 'variable'">[{{element.val}}]</code>
+                    <span class="segment" ng-if="element.type == 'segment'">{{element.val}}</span>
+                </span>
+            </h3>
+            <span class="col-sm-2">
+                <a class="pull-right btn btn-xs btn-info" tooltip="{{endpoint.created | calendar}}">Created {{endpoint.created | fromNow}}</a><br/>
+                <a class="pull-right btn btn-xs btn-info" tooltip="{{endpoint.updated | calendar}}">Updated {{endpoint.updated | fromNow}}</a>
             </span>
-        </h3>
+        </span>
+
 
         <span class="row">
             <h4>Methods</h4>
