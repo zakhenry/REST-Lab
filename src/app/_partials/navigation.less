@@ -8,24 +8,31 @@
 @cs-darkbrown : #59493E;
 
 
-#header{
-  height: 60px;
-  padding: 2px;
-  background-color: @cs-darkblue;
+#header-container {
 
-  h1{
-    position: relative;
-    top: -18px;
-    small{
+  #header{
+    height: 60px;
+    padding: 2px;
+    background-color: @cs-darkblue;
+
+    h1{
       position: relative;
-      top: -10px;
+      top: -18px;
+      small{
+        position: relative;
+        top: -10px;
+      }
+    }
+
+    *{
+      color: @cs-white
     }
   }
 
-  *{
-    color: @cs-white
-  }
+
+
 }
+
 
 .nav-icon{
   width: 48px;
@@ -39,14 +46,6 @@
   }
 }
 
-.icon-restlab.background{
-  position: absolute;
-  top: 200px;
-  right: -200px;
-  color: #fff;
-  opacity: 0.3;
-  font-size: 1000px;
-}
 
 .breadcrumb-wrapper{
   width: 100%;
