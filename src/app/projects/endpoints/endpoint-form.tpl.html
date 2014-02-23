@@ -29,5 +29,7 @@
         <button ng-if="endpointFormMode == 'add'" ng-disabled="!endpointForm.$dirty || endpointForm.$invalid" class="btn btn-primary" ng-click="addNewEndpoint(newEndpoint)">Add Endpoint</button>
         <button ng-if="endpointFormMode == 'edit'" ng-disabled="!endpointForm.$dirty || endpointForm.$invalid" class="btn btn-primary" ng-click="updateEndpoint(newEndpoint)">Update Endpoint</button>
         <button class="btn" ng-click="closeForm()">Cancel</button>
+
+        <pre>{{newEndpoint|json}}</pre>
     </ng-form>
 </div>

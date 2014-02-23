@@ -1,8 +1,14 @@
 
 
-angular.module('app.projects.endpoints', [])
+angular.module('app.projects.endpoints', ['app.projects.endpoints.tests'])
 
     .config(function(stateHelperProvider) {
+
+        stateHelperProvider.addState('defaultLayout.projects.project.endpoints.endpoint', {
+            url: '/:endpointKey',
+            abstract: true
+        });
+
         stateHelperProvider.addState('defaultLayout.projects.project.endpoints', {
             url: '/endpoints',
             views: {
@@ -64,21 +70,6 @@ angular.module('app.projects.endpoints', [])
             $scope.$broadcast('endpointAdd'); //fwd message to the children
         };
 
-/*        $scope.endpointFilterTerms = [
-            {
-                title: 'URI',
-                attr: 'uri.key'
-            },
-            {
-                title: 'Date Created',
-                attr: 'created'
-            },
-            {
-                title: 'Date Updated',
-                attr: 'updated'
-            }
-        ];*/
-
     })
 
     .filter('startFrom', function() { //filter for handling pagination
@@ -125,7 +116,8 @@ angular.module('app.projects.endpoints', [])
                 PUT : false,
                 DELETE : false,
                 PATCH : false
-            }
+            },
+            tests: []
         };
 
         $scope.newEndpoint = emptyEndpoint;
@@ -175,13 +167,19 @@ angular.module('app.projects.endpoints', [])
                     };
                 });
 
-                $scope.newEndpoint.uri.key = _.pluck(_.filter(uriObject, {type:'segment'}), 'val').join('');
+                var noVariablesUri = _.pluck(_.filter(uriObject, {type:'segment'}), 'val').join('');
+                $scope.newEndpoint.uri.variblesRemoved = noVariablesUri;
+                $scope.newEndpoint.slug = name
+                    .toLowerCase()
+                    .replace(/[^\w ]+/g,'-') //change invalid chars to -
+                    .replace(/^[^\w]/, '') //remove leading char
+                ;
 
                 existing = _.find(project.endpoints, function(endpoint){
-                    return endpoint.uri.key == $scope.newEndpoint.uri.key;
+                    return endpoint.uri.variblesRemoved == $scope.newEndpoint.uri.variblesRemoved;
                 });
 
-                if (!!existing && $scope.endpointFormMode == 'edit' && existing.uri.key == $scope.newEndpoint.uri.key){
+                if (!!existing && $scope.endpointFormMode == 'edit' && existing.uri.variblesRemoved == $scope.newEndpoint.uri.variblesRemoved){
                     existing = false;
                 }
 
@@ -194,6 +192,36 @@ angular.module('app.projects.endpoints', [])
 
         });
 
+        $scope.$watch('newEndpoint.methods', function(newMethods, oldMethods){
+
+
+            _.forIn(newMethods, function(value, method){
+                var existing = _.find($scope.newEndpoint.tests, {method:method});
+                if (value){
+
+                    if (_.isUndefined(existing)){
+
+                        $scope.newEndpoint.tests.push({ //build the default structure
+                            method : method
+                        });
+                    }
+                }else{
+
+                    if (oldMethods[method]){ //has now been deselected
+                        console.log('removing test for '+method+', probably should warn the user?'); //@todo warn user
+
+                        if (existing){
+                            $scope.newEndpoint.tests = _.without($scope.newEndpoint.tests, _.find($scope.newEndpoint.tests, {method : method})); //remove the method
+                        }
+
+                    }
+
+                }
+
+            });
+
+        }, true);
+
         var resetForm = function(){
             $scope.newEndpoint = emptyEndpoint;
             $scope.endpointForm.$setPristine();
@@ -202,17 +230,12 @@ angular.module('app.projects.endpoints', [])
 
         $scope.addNewEndpoint = function(endpoint){
             endpoint.created = moment();
-//            project.endpoints.push(endpoint);
             $scope.$emit('saveEndpoint', endpoint);
             $scope.closeForm();
         };
 
         $scope.updateEndpoint = function(endpoint){
             endpoint.updated = moment();
-//            var oldEndpoint = _.find(project.endpoints, {created:endpoint.created}); //created is used as a unique key
-
-//            oldEndpoint = _.merge(oldEndpoint, endpoint);
-
 
             $scope.$emit('saveEndpoint', endpoint);
 

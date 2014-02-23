@@ -26,12 +26,13 @@ angular.module('breadcrumbs', [])
                                 url : $state.href(state.self.name, $state.params)
                             };
 
-                            if (state.ownParams.length>0){
+                            if (state.ownParams.length>0){ //state has variable
                                 breadcrumb.title = $state.params[state.ownParams[0]]; //awkward hack as I don't know how to handle multiple params per crumb
                             }
 
                             if (state.self.abstract){
                                 breadcrumb.link = false; //dont link to an abstract state
+                                breadcrumb.url = $state.href(state.parent.self.name, $state.params); //link to parent instead
                             }
 
                             return breadcrumb;

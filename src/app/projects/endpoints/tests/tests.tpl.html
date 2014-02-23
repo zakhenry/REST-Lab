@@ -1,0 +1,14 @@
+<div class="container">
+
+    <h1>Tests <small>Independent tests for verifying endpoint behavior</small></h1>
+
+    <tabset>
+        <tab select="tabSelected()" ng-repeat="methodTest in endpoint.tests">
+            <tab-heading>
+                <i class="icon-restlab"></i> {{methodTest.method}}
+            </tab-heading>
+            <div ui-view="testView"></div>
+        </tab>
+    </tabset>
+
+</div>
