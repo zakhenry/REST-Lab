@@ -2,7 +2,7 @@ angular.module('httpHeaderService', [])
     .factory('httpHeaderService', function () {
 
         // Private methods, namespaced for code clarity
-        var private = {
+        var privateMethods = {
             /**
              * grabbed and formatted from http://en.wikipedia.org/wiki/List_of_HTTP_header_fields
              * Build in excel with ="{""header"":"""&B4&""",""description"":"""&C4&""",""example"":"""&D4&""",""status"":"""&E4&""",""category"":""standard""},"
@@ -98,10 +98,18 @@ angular.module('httpHeaderService', [])
             }
         };
 
-        var public = {
-
+        var publicMethods = {
+            getLibrary : function(){
+                return privateMethods.headerLibrary;
+            },
+            getRequests : function(){
+                return privateMethods.headerLibrary.request;
+            },
+            getResponses : function(){
+                return privateMethods.headerLibrary.response;
+            }
         };
 
-        return public;
+        return publicMethods;
     })
 ;
