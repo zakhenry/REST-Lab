@@ -102,11 +102,14 @@ angular.module('httpHeaderService', [])
             getLibrary : function(){
                 return privateMethods.headerLibrary;
             },
-            getRequests : function(){
+            getRequestHeaders : function(){
                 return privateMethods.headerLibrary.request;
             },
-            getResponses : function(){
+            getResponseHeaders : function(){
                 return privateMethods.headerLibrary.response;
+            },
+            getAllHeaders : function(){
+                return _.merge(privateMethods.headerLibrary.request, privateMethods.headerLibrary.response);
             }
         };
 

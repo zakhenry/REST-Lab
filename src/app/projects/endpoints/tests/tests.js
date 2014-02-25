@@ -29,11 +29,14 @@ angular.module('app.projects.endpoints.tests', [])
 
     })
 
-    .controller('TestCtrl', function($scope) {
+    .controller('TestCtrl', function($scope, httpHeaderService) {
         console.log('test ctrl called');
         var test = $scope.methodTest;
 
         $scope.test = test;
+
+        $scope.requestHeaders = httpHeaderService.getRequestHeaders();
+        $scope.responseHeaders = httpHeaderService.getResponseHeaders();
 
     })
 

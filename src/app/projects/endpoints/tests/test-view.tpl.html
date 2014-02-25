@@ -1,4 +1,15 @@
 <div class="row">
     Test content will go here
     <pre>{{test|json}}</pre>
-</div>
+
+    <h3>Header typeahead tests</h3>
+
+    <!--<pre>Model: {{requestChosen | json}}</pre>-->
+    <!--<input type="text" placeholder="Start typing request header" ng-model="requestChosen" typeahead="headerObj as headerObj.header for headerObj in requestHeaders | filter:{header:$viewValue} | limitTo:8" class="form-control">-->
+    <!--<pre>Model: {{responseChosen | json}}</pre>-->
+    <!--<input type="text" placeholder="Start typing response header" ng-model="responseChosen" typeahead="headerObj as headerObj.header for headerObj in responseHeaders | filter:{header:$viewValue} | limitTo:8" class="form-control">-->
+<ng-form>
+    <pre>Chosen: {{requestChosen|json}}</pre>
+        <header-input type="request" placeholder="Start typing request header" ng-model="requestChosen"></header-input>
+    </div>
+</ng-form>
