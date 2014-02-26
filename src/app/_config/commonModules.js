@@ -3,5 +3,6 @@ angular.module('commonModules', [
     'stateHelper',
     'validation',
     'breadcrumbs',
-    'momentFilters'
+    'momentFilters',
+    'projectStatsGraph'
 ]);
