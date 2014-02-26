@@ -36,9 +36,12 @@ angular.module('app.projects', ['app.projects.endpoints'])
 
     .controller('ProjectListControl', function($rootScope, $scope, $location) {
 
-
-        $scope.projectFormVisible = $scope.$storage.restLab.projects.length === 0; //default to show when there are no projects
-        $scope.projectFormMode = 'add';
+        $scope.$on('$viewContentLoaded', function() { //all controllers have loaded
+            if ($scope.$storage.restLab.projects.length === 0){
+                console.log('broadcasting an add project event');
+                $scope.showAddProjectForm();
+            }
+        });
 
         $scope.$on('projectChange', function(event, project){
             console.log('detected project edit',project);
@@ -46,11 +49,13 @@ angular.module('app.projects', ['app.projects.endpoints'])
         });
 
         $scope.$on('projectFormClosed', function(event, message){
-            $scope.projectFormVisible = false;
+            if (message.type == 'add'){
+                $scope.addProjectFormVisible = false;
+            }
         });
 
         $scope.showAddProjectForm = function(){
-            $scope.projectFormVisible = true;
+            $scope.addProjectFormVisible = true;
             $scope.$broadcast('projectAdd'); //fwd message to the children
         };
 
@@ -83,7 +88,7 @@ angular.module('app.projects', ['app.projects.endpoints'])
             endpoints: [],
             tests: []
         };
-        $scope.newProject = defaultProject;
+        $scope.newProject = _.clone(defaultProject);
 
         $scope.$on('projectEdit', function(event, message){
 
@@ -100,12 +105,11 @@ angular.module('app.projects', ['app.projects.endpoints'])
         });
         /* Listen to parents */
         $scope.$on('projectAdd', function(event, message){
-            console.log('detected project add',message);
-            if (_.isUndefined($scope.project)){
-                $scope.projectFormVisible = true;
+            if (!$scope.project){
+                console.log('detected project add',message);
+                resetForm();
                 $scope.projectFormMode = 'add';
-                $scope.newProject = defaultProject;
-                $scope.addProjectForm.$setPristine();
+                $scope.projectFormVisible = true;
             }
         });
 
@@ -137,14 +141,15 @@ angular.module('app.projects', ['app.projects.endpoints'])
 
 
         var resetForm = function(){
-            $scope.newProject = defaultProject;
+            $scope.newProject = {};
+            $scope.newProject = _.clone(defaultProject, true);
             $scope.addProjectForm.$setPristine();
             $scope.projectFormVisible = false;
         };
 
         $scope.addNewProject = function(project){
             project.created = moment();
-            project = _.merge(project, defaultProject);
+            project = _.merge(project, _.clone(defaultProject, true));
             $scope.$storage.restLab.projects.push(project);
             $scope.closeForm();
         };
