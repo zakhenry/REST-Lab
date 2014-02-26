@@ -10,11 +10,14 @@ angular.module('headerInput', [])
                 type: '@'
             },
             templateUrl: 'directives/headerInput/headerInput.tpl.html',
-            require: ['^form', 'ngModel'],
+            require: ['?^form', 'ngModel'],
             link: function ($scope, element, attrs, controllers) {
 
                 var formCtrl = controllers[0];
                 var inputCtrl = controllers[1];
+
+
+                console.log('controllers', controllers);
 
                 $scope.headerArray = [];
 
@@ -30,18 +33,30 @@ angular.module('headerInput', [])
                 }
 
                 //Required validation
-                var validateSelected = function() {
-                    var valid = typeof $scope.model !== 'undefined';
-                    inputCtrl.$setValidity('required', valid);
-                    return valid;
+                var validateInput = function() {
+                    var validRequired = typeof $scope.model !== 'undefined' && $scope.model !== '';
+                    inputCtrl.$setValidity('required', validRequired);
+
+                    console.log('testing validity');
+
+                    var invalidHeaderChar = /[\(\)<>@,;:\\\/\[\]\?=\{\}"]/; //invalid chars are: ()<>,;:\/[]?={}"
+                    var headerCharValid = !invalidHeaderChar.test($scope.model);
+                    inputCtrl.$setValidity('headerCharValid', headerCharValid);
+                    console.log('headerCharValid', headerCharValid);
+
+                    return validRequired && headerCharValid;
                 };
 
-                inputCtrl.$parsers.push(validateSelected);
-                inputCtrl.$formatters.push(validateSelected);
+                inputCtrl.$parsers.push(validateInput);
+                inputCtrl.$formatters.push(validateInput);
 
-//                $scope.$watch('model', function(newVal){
-//                    inputCtrl.$setValidity('required', 'true');
-//                }, true);
+                $scope.$watch('model', function(newVal, oldVal){
+                    validateInput();
+
+                    if (newVal !== oldVal){
+                        formCtrl.$setDirty();
+                    }
+                }, true);
 
             }
         };
