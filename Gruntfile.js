@@ -585,7 +585,7 @@ module.exports = function (grunt) {
     /**
      * The `test` task for travis ci to run tests via karma (linked from npm test)
      */
-    grunt.registerTask('test', ['karma:travis'])
+    grunt.registerTask('test', ['karma:travis']);
 
     /**
      * A utility function to get all app JavaScript sources.
