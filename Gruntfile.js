@@ -380,6 +380,11 @@ module.exports = function (grunt) {
             },
             continuous: {
                 singleRun: true
+            },
+            travis: {
+                configFile: '<%= build_dir %>/karma-unit.js',
+                singleRun: true,
+                browsers: ['PhantomJS']
             }
         },
 
@@ -575,6 +580,12 @@ module.exports = function (grunt) {
         'clean:compile', 'less:compile', 'copy:compile_src_files', 'copy:compile_assets', 'copy:compile_vendor_files',
         'ngmin', 'concat', 'uglify', 'index:compile'
     ]);
+
+
+    /**
+     * The `test` task for travis ci to run tests via karma (linked from npm test)
+     */
+    grunt.registerTask('test', ['karma:travis'])
 
     /**
      * A utility function to get all app JavaScript sources.
