@@ -12,7 +12,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-conventional-changelog');
     grunt.loadNpmTasks('grunt-bump');
-    grunt.loadNpmTasks('grunt-recess');
+    grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-ngmin');
     grunt.loadNpmTasks('grunt-html2js');
@@ -253,13 +253,13 @@ module.exports = function (grunt) {
         },
 
         /**
-         * `recess` handles our LESS compilation and uglification automatically.
+         * `grunt-contrib-less` handles our LESS compilation and uglification automatically.
          * Only our `main.less` file is included in compilation; all other files
          * must be imported from this file.
          */
-        recess: {
+        less: {
             build: {
-                files: [
+                files : [
                     {
                         expand: true,
                         src: '<%= vendor_files.css %>',
@@ -273,12 +273,8 @@ module.exports = function (grunt) {
                         ext: '.css'
                     }
                 ],
+
                 options: {
-                    compile: true,
-                    compress: false,
-                    noUnderscores: false,
-                    noIDs: false,
-                    zeroUnits: false
                 }
             },
             compile: {
@@ -286,11 +282,9 @@ module.exports = function (grunt) {
                 dest: '<%= build_dir %>/assets/<%= pkg.name %>.css',
                 options: {
                     compile: false,
-                    compress: true,
-                    noUnderscores: false,
-                    noIDs: false,
-                    zeroUnits: false
+                    compress: true
                 }
+
             }
         },
 
@@ -428,7 +422,7 @@ module.exports = function (grunt) {
                 src: [
                     '<%= concat.compile_js.dest %>',
                     '<%= vendor_files.js_separate %>',
-                    '<%= recess.compile.dest %>'
+                    '<%= less.compile.dest %>'
                 ]
             }
         },
@@ -528,7 +522,7 @@ module.exports = function (grunt) {
              */
             less: {
                 files: ['src/**/*.less'],
-                tasks: ['recess:build', 'replace:build']
+                tasks: ['less:build', 'replace:build']
             },
 
             /**
@@ -568,7 +562,7 @@ module.exports = function (grunt) {
      * The `build` task gets your app ready to run for development and testing.
      */
     grunt.registerTask('build', [
-        'clean:build', 'html2js', 'jshint', 'recess:build',
+        'clean:build', 'html2js', 'jshint', 'less:build',
         'copy:build_assets', 'copy:build_src_files', 'copy:build_appjs', 'copy:build_vendorjs', 'replace:build',
         'copy:build_vendor_files', 'index:build', 'karmaconfig', 'karma:continuous'
     ]);
@@ -578,7 +572,7 @@ module.exports = function (grunt) {
      * minifying your code.
      */
     grunt.registerTask('compile', [
-        'clean:compile', 'recess:compile', 'copy:compile_src_files', 'copy:compile_assets', 'copy:compile_vendor_files',
+        'clean:compile', 'less:compile', 'copy:compile_src_files', 'copy:compile_assets', 'copy:compile_vendor_files',
         'ngmin', 'concat', 'uglify', 'index:compile'
     ]);
 
@@ -596,7 +590,7 @@ module.exports = function (grunt) {
      */
     function filterForCSS(files) {
         return files.filter(function (file) {
-            return file.match(/\.css$/);
+            return file.match(/^(?=.*.css)((?!vendor).)*$/);
         });
     }
 
