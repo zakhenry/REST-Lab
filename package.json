@@ -35,7 +35,17 @@
         "grunt-coffeelint": "0.0.6",
         "grunt-conventional-changelog": "~0.1.1",
         "grunt-bump": "0.0.6",
-        "grunt-text-replace": "~0.3.6"
+        "grunt-text-replace": "~0.3.6",
+
+
+
+        "browserify": "3.41.x",
+        "grunt-browserify": "2.0.7",
+        "http-parser-js": "git://github.com/iceddev/http-parser-js.git",
+        "net-chromify": "git://github.com/iceddev/net-chromify.git",
+        "freelist-chromify": "git://github.com/iceddev/freelist-chromify.git",
+        "string_decoder-chromify": "git://github.com/iceddev/string_decoder-chromify.git",
+        "http-chromify": "git://github.com/iceddev/http-chromify.git"
     },
     "scripts": {
         "test": "grunt test"

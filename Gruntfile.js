@@ -18,6 +18,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-html2js');
     grunt.loadNpmTasks('grunt-text-replace');
 
+    grunt.loadNpmTasks('grunt-browserify');
+
     /**
      * Load in our build configuration file.
      */
@@ -543,7 +545,43 @@ module.exports = function (grunt) {
                     livereload: false
                 }
             }
+        },
+
+
+
+//        browserify: {
+//            'node-app/example/http/node.js': {
+//                options: {
+//                    exports: ['require', 'http'],
+//                    require: {
+//                        string_decoder: 'string_decoder-chromify',
+//                        freelist: 'freelist-chromify',
+//                        net: 'net-chromify',
+//                        http_parser: 'http-parser-js',
+//                        http: 'http-chromify'
+//                    }
+//                }
+//            }
+//        }
+
+        browserify: {
+            files: {
+                src: ['node-app/example/http/index.js'],
+                dest: 'build/node-app.js'
+            },
+            options: {
+                exports: ['require', 'http'],
+                require: {
+                    string_decoder: 'string_decoder-chromify',
+                    freelist: 'freelist-chromify',
+                    net: 'net-chromify',
+                    http_parser: 'http-parser-js',
+                    http: 'http-chromify'
+                }
+            }
+
         }
+
     };
 
     grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));
@@ -586,6 +624,12 @@ module.exports = function (grunt) {
      * The `test` task for travis ci to run tests via karma (linked from npm test)
      */
     grunt.registerTask('test', ['karma:travis']);
+
+
+    /**
+     * Browserify the node server
+     */
+    grunt.registerTask('compile_server', 'browserify');
 
     /**
      * A utility function to get all app JavaScript sources.
