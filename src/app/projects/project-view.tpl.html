@@ -7,11 +7,7 @@
             <div class="row">
                 <span class="col-sm-2"><h4>Test statistics</h4></span>
                 <span class="col-sm-10">
-                    <progress class="progress-striped">
-                        <bar ng-repeat="bar in project.statsGraph" value="bar.value" type="{{bar.type}}">
-                            <span ng-hide="bar.value < 5">{{bar.name}} {{bar.value}}% </span>({{bar.count}})
-                        </bar>
-                    </progress>
+                    <project-stats-graph project="project"></project-stats-graph>
                 </span>
             </div>
 

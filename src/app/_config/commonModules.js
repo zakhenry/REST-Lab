@@ -4,6 +4,7 @@ angular.module('commonModules', [
     'validation',
     'breadcrumbs',
     'momentFilters',
+    'projectStatsGraph',
     'httpHeaderService',
     'headerInput'
 ]);

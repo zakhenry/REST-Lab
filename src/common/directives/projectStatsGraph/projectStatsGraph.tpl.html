@@ -1,0 +1,13 @@
+<div class="progress progress-striped project-stats-graph active">
+    <div
+        ng-repeat="bar in statsGraph"
+        class="progress-bar progress-bar-{{bar.type}}"
+        role="progressbar"
+        aria-valuenow="{{bar.value}}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        ng-style="{width: bar.value+'%'}"
+    >
+        <span ng-hide="bar.value < 5">{{bar.name}} {{bar.value}}% </span>({{bar.count}})
+    </div>
+</div>
