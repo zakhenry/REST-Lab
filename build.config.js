@@ -20,7 +20,7 @@ module.exports = {
      * app's unit tests.
      */
     app_files: {
-        js: ['src/**/*.js', '!src/**/*.spec.js'],
+        js: ['src/**/*.js', '!src/**/*.spec.js', '!src/chrome-server/main.js'],
         jsunit: ['src/**/*.spec.js'],
 
         atpl: ['src/app/**/*.tpl.html'],
@@ -30,7 +30,7 @@ module.exports = {
 
         app_less: ['src/global.less', 'src/app/**/*.less', 'src/common/**/*.less'],
 
-        files_from_src: ['.htaccess', 'manifest.json']
+        files_from_src: ['.htaccess', 'manifest.json', 'chrome-server/*.js']
     },
 
     /**

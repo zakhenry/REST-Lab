@@ -571,13 +571,20 @@ module.exports = function (grunt) {
             },
             options: {
                 exports: ['require', 'http'],
-                require: {
-                    string_decoder: 'string_decoder-chromify',
-                    freelist: 'freelist-chromify',
-                    net: 'net-chromify',
-                    http_parser: 'http-parser-js',
-                    http: 'http-chromify'
-                }
+//                require: {
+//                    string_decoder: 'string_decoder-chromify',
+//                    freelist: 'freelist-chromify',
+//                    net: 'net-chromify',
+//                    http_parser: 'http-parser-js',
+//                    http: 'http-chromify'
+//                }
+                alias: [
+                    'string_decoder-chromify:string_decoder',
+                    'freelist-chromify:freelist',
+                    'net-chromify:net',
+                    'http-parser-js:http_parser',
+                    'http-chromify:http'
+                ]
             }
 
         }
