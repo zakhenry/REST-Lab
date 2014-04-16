@@ -2,7 +2,6 @@
   "name": "rest-lab-app",
   "version": "0.0.1",
   "devDependencies": {
-    "jquery": "2.0.3",
     "angular-unstable": "1.1.5",
     "angular-resource-unstable": "1.1.5",
     "angular-mocks-unstable": "1.1.5",
@@ -13,7 +12,8 @@
     "font-awesome": "4.0.3",
     "moment": "2.1.0",
     "ngstorage": "~0.2.3",
-    "lodash": "2.4.1"
+    "lodash": "2.4.1",
+    "angular-chrome-storage": "infomofo/angular-chrome-storage"
   },
   "dependencies": {}
 }

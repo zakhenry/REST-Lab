@@ -17,12 +17,45 @@
 //            "local_path":"index.html"
 //        },
         "background": {
-            "scripts": ["chrome-server/tcp-server.js", "chrome-server/main.js"]
+            "scripts": [
+                "main.js"
+//                "chrome-server/underscore.js",
+//                "chrome-server/common.js",
+//                "chrome-server/mime.js",
+//                "chrome-server/buffer.js",
+//                "chrome-server/request.js",
+//                "chrome-server/stream.js",
+//                "chrome-server/connection.js",
+//                "chrome-server/webapp.js",
+//                "chrome-server/handlers.js",
+//                "chrome-server/httplib.js",
+//                "background.js",
+//                "chrome-server/main.js"
+            ]
         }
     },
 
-    "permissions":["storage", "http://*/*", "https://*/*", "experimental", { "socket" : ["tcp-listen"] } ],
-    "offline_enabled":true
-//    "content_security_policy": "default-src 'self'; connect-src *; script-src 'self' https://ssl.google-analytics.com https://platform.twitter.com https://apis.google.com; style-src * blob: data: filesystem: 'unsafe-inline'; img-src *; frame-src * http://www.facebook.com https://plusone.google.com https://platform.twitter.com blob: data: filesystem:; font-src * blob: data: filesystem:; media-src *;",
+    "permissions":[
+        "storage",
+        "http://*/*",
+        "https://*/*",
+        "notifications",
+        {
+            "fileSystem":[
+                "write",
+                "directory",
+                "retainEntries"
+            ]
+        },
+        {
+            "socket":[
+                "tcp-connect",
+                "udp-bind::",
+                "tcp-listen::",
+                "udp-send-to::"
+            ]
+        }
+    ],
 
+    "offline_enabled":true
 }

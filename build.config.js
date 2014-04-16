@@ -20,7 +20,7 @@ module.exports = {
      * app's unit tests.
      */
     app_files: {
-        js: ['src/**/*.js', '!src/**/*.spec.js', '!src/chrome-server/main.js'],
+        js: ['src/**/*.js', '!src/**/*.spec.js', '!src/chrome-server/**/*.js'],
         jsunit: ['src/**/*.spec.js'],
 
         atpl: ['src/app/**/*.tpl.html'],
@@ -30,7 +30,7 @@ module.exports = {
 
         app_less: ['src/global.less', 'src/app/**/*.less', 'src/common/**/*.less'],
 
-        files_from_src: ['.htaccess', 'manifest.json', 'chrome-server/*.js']
+        files_from_src: ['.htaccess', 'manifest.json', 'main.js']
     },
 
     /**
@@ -49,7 +49,7 @@ module.exports = {
      */
     vendor_files: {
         js: [
-            'vendor/jquery/jquery.js',
+//            'vendor/jquery/jquery.js',
             'vendor/angular-unstable/angular.js',
             'vendor/angular-unstable/angular-resource.js',
             'vendor/angular-bootstrap/ui-bootstrap-tpls.min.js',
@@ -60,7 +60,18 @@ module.exports = {
             'vendor/restangular/dist/restangular.js',
             'vendor/moment/min/moment.min.js',
             'vendor/moment/min/lang/en-gb.js',
-            'vendor/ngstorage/ngStorage.js'
+            'vendor/angular-chrome-storage/angular-chrome-storage.js',
+
+            "local_vendor/chrome-server/underscore.js",
+            "local_vendor/chrome-server/common.js",
+            "local_vendor/chrome-server/mime.js",
+            "local_vendor/chrome-server/buffer.js",
+            "local_vendor/chrome-server/request.js",
+            "local_vendor/chrome-server/stream.js",
+            "local_vendor/chrome-server/connection.js",
+            "local_vendor/chrome-server/webapp.js",
+            "local_vendor/chrome-server/handlers.js",
+            "local_vendor/chrome-server/httplib.js"
         ],
         /**
          * Files to NOT be concatenated or minified, but will still be included in the project
