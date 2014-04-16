@@ -14,7 +14,7 @@ angular.module('app', [
         moment.lang('en-gb');
     })
 
-    .controller('AppCtrl', function($scope, $rootScope, mocksServer) {
+    .controller('AppCtrl', function($scope, $rootScope, mocksServer, $state) {
 
 //        $rootScope.$storage = $localStorage;
         $rootScope.$storage = {};
@@ -30,6 +30,6 @@ angular.module('app', [
 
         mocksServer.start();
 
-
+        $state.go('defaultLayout.projects');
     })
 ;

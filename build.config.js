@@ -61,8 +61,6 @@ module.exports = {
             'vendor/moment/min/moment.min.js',
             'vendor/moment/min/lang/en-gb.js',
             'vendor/angular-chrome-storage/angular-chrome-storage.js',
-
-            "local_vendor/chrome-server/underscore.js",
             "local_vendor/chrome-server/common.js",
             "local_vendor/chrome-server/mime.js",
             "local_vendor/chrome-server/buffer.js",

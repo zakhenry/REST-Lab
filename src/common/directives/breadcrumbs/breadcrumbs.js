@@ -23,7 +23,8 @@ angular.module('breadcrumbs', [])
                             var breadcrumb = {
                                 title : state.self.url.replace('/', ''),
                                 link : true,
-                                url : $state.href(state.self.name, $state.params)
+                                url : $state.href(state.self.name, $state.params),
+                                state: state
                             };
 
                             if (state.ownParams.length>0){ //state has variable
@@ -41,6 +42,13 @@ angular.module('breadcrumbs', [])
                         .compact() //remove all the false values
                         .value()
                     ;
+                };
+
+                $scope.gotoState = function(state){
+                    if (!state.self.abstract){
+                        $state.go(state.self.name, $state.params);
+                    }
+
                 };
 
 
