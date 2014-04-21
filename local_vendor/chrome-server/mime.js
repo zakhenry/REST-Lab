@@ -983,9 +983,9 @@ var MIMETYPES = {
 };
 var MIMECATEGORIES = {'video':[],'audio':[]}
 for (var key in MIMETYPES) {
-    if (MIMETYPES[key].startsWith('video/')) {
+    if (MIMETYPES[key].indexOf('video/') >= 0) {
         MIMECATEGORIES['video'].push( key )
-    } else if (MIMETYPES[key].startsWith('audio/')) {
+    } else if (MIMETYPES[key].indexOf('audio/') >= 0) {
         MIMECATEGORIES['audio'].push( key )
     }
 }

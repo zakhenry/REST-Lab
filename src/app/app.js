@@ -14,10 +14,12 @@ angular.module('app', [
         moment.lang('en-gb');
     })
 
-    .controller('AppCtrl', function($scope, $rootScope, mocksServer, $state) {
+    .controller('AppCtrl', function($scope, $rootScope, mocksServer, $state, chromeStorage) {
 
 //        $rootScope.$storage = $localStorage;
-        $rootScope.$storage = {};
+        $rootScope.$storage = chromeStorage;
+
+        console.log('localstorage bound');
 
         if (_.isUndefined($rootScope.$storage.restLab)){ //storage is empty (never been created)
 
@@ -25,8 +27,10 @@ angular.module('app', [
                 projects : []
             };
 
+            console.log('localstorage default initialised');
+
         }
-        console.log('localstorage bound');
+
 
         mocksServer.start();
 

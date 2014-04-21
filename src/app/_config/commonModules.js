@@ -4,5 +4,7 @@ angular.module('commonModules', [
     'validation',
     'breadcrumbs',
     'momentFilters',
-    'projectStatsGraph'
+    'projectStatsGraph',
+    'mocksServer',
+    'chromeStorage'
 ]);
