@@ -18,6 +18,10 @@ chrome.app.runtime.onLaunched.addListener(function(intentData) {
 
     chrome.app.window.create('index.html', windowOptions, function(mainWindow) {
         window.mainWindow = mainWindow;
+
+        mainWindow.onClosed.addListener(function(){
+            destroyActiveSocket();
+        });
     });
 
     console.log('launched');
@@ -25,23 +29,20 @@ chrome.app.runtime.onLaunched.addListener(function(intentData) {
 
 });
 
-var activeSockets = [];
+var activeSocket = null;
 
-function addActiveSocket(socketId){
-    activeSockets.push(socketId);
+function setActiveSocket(socketId){
+    activeSocket = socketId;
 }
 
-function clearActiveSockets(){
-    activeSockets = [];
+function unsetActiveSocket(){
+    activeSocket = null;
 }
 
-function cleanupSockets(){
-    for (var socketIndex in activeSockets){
-        var id = activeSockets[socketIndex];
+function destroyActiveSocket(){
+    chrome.socket.disconnect(activeSocket);
+    chrome.socket.destroy(activeSocket);
 
-        chrome.socket.disconnect(id);
-        chrome.socket.destroy(id);
-    }
-    clearActiveSockets();
-    return true;
+    console.log('unloaded socket', activeSocket);
+    unsetActiveSocket();
 }

@@ -1,5 +1,5 @@
 angular.module('mocksServer', [])
-    .factory('mocksServer', function ($rootScope) {
+    .factory('mocksServer', function ($rootScope, $window) {
 
 
         function JsonMocksHandler() {
@@ -25,14 +25,6 @@ angular.module('mocksServer', [])
             server  : new chrome.WebApplication({handlers:handlers, port:8887})
         };
 
-
-        chrome.runtime.getBackgroundPage(function(bg){
-
-            bg.cleanupSockets();
-
-        });
-
-
         var publicMethods = {
 
             start : function(){
@@ -46,7 +38,7 @@ angular.module('mocksServer', [])
 
                 chrome.runtime.getBackgroundPage(function(bg){
 
-                    bg.addActiveSocket(privateMethods.server.sockInfo.socketId);
+                    bg.setActiveSocket(privateMethods.server.sockInfo.socketId); //save new socket id to the bg app for cleanup on close
 
                 });
 
@@ -54,6 +46,7 @@ angular.module('mocksServer', [])
                 this.info.lastStarted = new Date();
 
                 console.log('starting webserver');
+
                 return this;
             },
 
@@ -66,7 +59,7 @@ angular.module('mocksServer', [])
 
                 chrome.runtime.getBackgroundPage(function(bg){
 
-                    bg.clearActiveSockets();
+                    bg.unsetActiveSocket(); //clear the active socket
 
                 });
 
