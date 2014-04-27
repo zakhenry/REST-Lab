@@ -24,3 +24,24 @@ chrome.app.runtime.onLaunched.addListener(function(intentData) {
 
 
 });
+
+var activeSockets = [];
+
+function addActiveSocket(socketId){
+    activeSockets.push(socketId);
+}
+
+function clearActiveSockets(){
+    activeSockets = [];
+}
+
+function cleanupSockets(){
+    for (var socketIndex in activeSockets){
+        var id = activeSockets[socketIndex];
+
+        chrome.socket.disconnect(id);
+        chrome.socket.destroy(id);
+    }
+    clearActiveSockets();
+    return true;
+}

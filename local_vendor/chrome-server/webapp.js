@@ -24,10 +24,9 @@
             this.lasterr = data
         },
         stop: function() {
-            socket.disconnect(this.sockInfo.socketId)
-            socket.destroy(this.sockInfo.socketId)
-            this.stopped = true
-            debugger;
+            socket.disconnect(this.sockInfo.socketId);
+            socket.destroy(this.sockInfo.socketId);
+            this.stopped = true;
         },
         start: function() {
             socket.create("tcp", {}, function(sockInfo) {

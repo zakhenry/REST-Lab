@@ -22,14 +22,34 @@ angular.module('mocksServer', [])
 
         // Private methods, namespaced for code clarity
         var privateMethods = {
-            server  : new chrome.WebApplication({handlers:handlers, port:8887}),
-            running : false
+            server  : new chrome.WebApplication({handlers:handlers, port:8887})
         };
+
+
+        chrome.runtime.getBackgroundPage(function(bg){
+
+            bg.cleanupSockets();
+
+        });
+
 
         var publicMethods = {
 
             start : function(){
+                if (this.info.running){
+                    console.log('server is already running. no need to start');
+                    return this;
+                }
+
                 privateMethods.server.start();
+
+
+                chrome.runtime.getBackgroundPage(function(bg){
+
+                    bg.addActiveSocket(privateMethods.server.sockInfo.socketId);
+
+                });
+
                 this.info.running = true;
                 this.info.lastStarted = new Date();
 
@@ -38,7 +58,18 @@ angular.module('mocksServer', [])
             },
 
             stop : function(){
+                if (!this.info.running){
+                    console.log('server is not running. no need to stop');
+                    return this;
+                }
                 privateMethods.server.stop();
+
+                chrome.runtime.getBackgroundPage(function(bg){
+
+                    bg.clearActiveSockets();
+
+                });
+
                 this.info.running = false;
                 this.info.lastStopped = new Date();
                 console.log('stopping webserver');
