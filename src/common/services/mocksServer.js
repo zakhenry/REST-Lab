@@ -1,10 +1,6 @@
 angular.module('mocksServer', [])
     .factory('mocksServer', function ($rootScope, $window) {
 
-
-
-
-
         // Private methods, namespaced for code clarity
         var privateMethods = {
             server  : null,
@@ -23,8 +19,27 @@ angular.module('mocksServer', [])
                 handleRequest: function() {
                     // handle get request
                     console.log(this);
-                    this.write('OK!, ' + this.request.uri);
+
+                    var response = privateMethods.processRequest(this.request);
+
+                    this.write(response.message, response.code);
                 }
+            },
+
+            processRequest: function(request){
+
+                var uri = request.uri.substr(request.uri.indexOf('/')+1); //remove the initial slash
+                var projectKey = uri.substr(0, uri.indexOf('/')); //everything up to the first slash
+                var endpointUrl = uri.substr(uri.indexOf('/')); //everything including and after the first slash
+
+                //var project = projectService.getProject(projectKey);
+                //var endpoint = project.getEndpoint(endpointUrl);
+
+                return {
+                    code : 400,
+                    message : 'OK!, ' + request.uri + ' project key '+projectKey+ ' endointUrl: '+endpointUrl
+                };
+
             },
 
             getHandlers : function (){
