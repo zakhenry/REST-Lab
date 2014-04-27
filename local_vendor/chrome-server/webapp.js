@@ -27,6 +27,7 @@
             socket.disconnect(this.sockInfo.socketId)
             socket.destroy(this.sockInfo.socketId)
             this.stopped = true
+            debugger;
         },
         start: function() {
             socket.create("tcp", {}, function(sockInfo) {

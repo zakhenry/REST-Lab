@@ -31,8 +31,17 @@ angular.module('stateManager', ['siteModules', 'stateHelper'])
         });
     })
 
-    .controller('NavigationCtrl', function($scope, $state, $location) {
+    .controller('NavigationCtrl', function($scope, $state, $location, mocksServer) {
 
-
+        $scope.mockServer = {
+            toggle : function(){
+                if (!mocksServer.info.running){
+                    mocksServer.start();
+                }else{
+                    mocksServer.stop();
+                }
+            },
+            info : mocksServer.info
+        };
     })
 ;

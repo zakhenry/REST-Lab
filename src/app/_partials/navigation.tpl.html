@@ -2,8 +2,21 @@
 
     <h1><span class="nav-icon"><i class="icon-restlab"></i></span>REST Lab<small> Putting your RESTful API through it's paces</small></h1>
 
+
+
+
 </div>
 
 <div class="breadcrumb-wrapper">
     <breadcrumbs></breadcrumbs>
+
+    <button
+            class="btn pull-right"
+            ng-class="{'btn-success':!mockServer.info.running, 'btn-warning':mockServer.info.running}"
+            ng-click="mockServer.toggle()"
+            >
+        <i class="fa fa-exchange"></i>
+        <span ng-if="mockServer.info.running"><i class="fa fa-circle fa-pulse"></i></span>
+    </button>
+
 </div>

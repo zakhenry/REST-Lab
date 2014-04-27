@@ -13,24 +13,9 @@
     },
 
     "app":{
-//        "launch":{
-//            "local_path":"index.html"
-//        },
         "background": {
             "scripts": [
                 "main.js"
-//                "chrome-server/underscore.js",
-//                "chrome-server/common.js",
-//                "chrome-server/mime.js",
-//                "chrome-server/buffer.js",
-//                "chrome-server/request.js",
-//                "chrome-server/stream.js",
-//                "chrome-server/connection.js",
-//                "chrome-server/webapp.js",
-//                "chrome-server/handlers.js",
-//                "chrome-server/httplib.js",
-//                "background.js",
-//                "chrome-server/main.js"
             ]
         }
     },
