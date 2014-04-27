@@ -31,6 +31,8 @@ angular.module('app', [
 
         }
 
+        mocksServer.start();
+
         $state.go('defaultLayout.projects');
     })
 ;

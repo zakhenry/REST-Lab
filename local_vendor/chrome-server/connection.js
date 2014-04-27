@@ -57,7 +57,8 @@
             } else if (method == 'HEAD') {
                 this.onRequest(this.curRequest)
             } else {
-                console.error('how to handle',this.curRequest)
+                this.onRequest(this.curRequest) //_xiphiaz added generic handling 14/04/27
+//                console.error('how to handle',this.curRequest)
             }
         },
         onRequest: function(request) {

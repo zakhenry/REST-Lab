@@ -2,28 +2,52 @@ angular.module('mocksServer', [])
     .factory('mocksServer', function ($rootScope, $window) {
 
 
-        function JsonMocksHandler() {
-            BaseHandler.prototype.constructor.call(this);
-        }
-        _.extend(JsonMocksHandler.prototype, {
-            get: function() {
-                // handle get request
-                this.write('OK!, ' + this.request.uri);
-            }
-        });
-        for (var key in BaseHandler.prototype) {
-            JsonMocksHandler.prototype[key] = BaseHandler.prototype[key];
-        }
 
-        var handlers = [
-            ['.*', JsonMocksHandler]
-        ];
 
 
         // Private methods, namespaced for code clarity
         var privateMethods = {
-            server  : new chrome.WebApplication({handlers:handlers, port:8887})
+            server  : null,
+
+            init : function(){
+
+                this.server = new chrome.WebApplication({
+                    handlers:this.getHandlers(),
+                    port:8887
+                });
+
+                return this;
+            },
+
+            methodHandlers : {
+                handleRequest: function() {
+                    // handle get request
+                    console.log(this);
+                    this.write('OK!, ' + this.request.uri);
+                }
+            },
+
+            getHandlers : function (){
+
+                function JsonMocksHandler() {
+                    BaseHandler.prototype.constructor.call(this);
+                }
+                _.extend(JsonMocksHandler.prototype, this.methodHandlers);
+
+                for (var key in BaseHandler.prototype) {
+                    JsonMocksHandler.prototype[key] = BaseHandler.prototype[key];
+                }
+
+                var handlers = [
+                    ['.*', JsonMocksHandler]
+                ];
+
+                return handlers;
+
+            }
         };
+
+        privateMethods.init();
 
         var publicMethods = {
 

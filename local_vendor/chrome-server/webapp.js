@@ -69,7 +69,8 @@
                     var cls = this.handlersMatch[i][1]
                     var requestHandler = new cls(request)
                     requestHandler.request = request
-                    var handlerMethod = requestHandler[request.method.toLowerCase()]
+//                    var handlerMethod = requestHandler[request.method.toLowerCase()]
+                    var handlerMethod = requestHandler['handleRequest']; //_xiphiaz added this generic handler
                     if (handlerMethod) {
                         handlerMethod.apply(requestHandler, reresult.slice(1))
                         return
